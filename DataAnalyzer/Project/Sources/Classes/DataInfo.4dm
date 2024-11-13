@@ -167,11 +167,11 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.lastOperation:=BLOB to longint:C551($blDataBlock; $swap; $offset)
 			Case of 
 				: (This:C1470.lastOperation=0)
-					This:C1470.lastOperationDescription:=Localized string:C991("The Cache has been correctly flushed")
+					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache has been correctly flushed")
 				: (This:C1470.lastOperation=-1)
-					This:C1470.lastOperationDescription:=Localized string:C991("The Cache flushing has been interrupted!")
+					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache flushing has been interrupted!")
 				Else 
-					This:C1470.lastOperationDescription:=Localized string:C991("Unknown Last Operation!")
+					This:C1470.lastOperationDescription:=Get localized string:C991("Unknown Last Operation!")
 			End case 
 			
 			$vdt_LastParam:=This:C1470.chunkToHex($blDataBlock; ->$offset; 4; False:C215)
@@ -241,23 +241,23 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.dataFileNeedsRepair:=($vdt_Flags1=1)
 			
 			If (This:C1470.dataFileNeedsRepair)
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File needs to be repaired."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File needs to be repaired."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File does not need to be repaired."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File does not need to be repaired."))
 			End if 
 			
 			This:C1470.dataFileContainsStructure:=($vdt_Flags3=1)
 			If (This:C1470.dataFileContainsStructure)
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Structure."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Structure."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Data."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Data."))
 			End if 
 			
 			This:C1470.indexStoredInSeparateSegment:=($vdt_Flags4=1)
 			If (This:C1470.indexStoredInSeparateSegment)
-				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in a separate segment."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in a separate segment."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in the same segment."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in the same segment."))
 			End if 
 			
 			$vdt_Addr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
@@ -564,34 +564,24 @@ Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $rea
 			This:C1470.dataFileHandle.offset:=$realAddress
 		End if 
 		
-		var $data : 4D:C1709.Blob
-		$data:=Try(This:C1470.dataFileHandle.readBlob($blkSize))
-		
-		If ($data=Null:C1517)
-			return 4D:C1709.Blob.new()
-		Else 
-			return $data
-		End if 
+		return Try(This:C1470.dataFileHandle.readBlob($blkSize))
 		
 	End if 
 	
 Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : Boolean) : 4D:C1709.Blob
 	
-	var $realAddress : Real
-	$realAddress:=$blockPosition*0x0080
-	If ($flIsNbOfBlocks)
-		$length:=$data2Read*0x0080
-	Else 
-		$length:=$data2Read
-	End if 
-	
-	This:C1470.dataFileHandle.offset:=$realAddress
-	
-	var $data : 4D:C1709.Blob
-	$data:=Try(This:C1470.dataFileHandle.readBlob($length))
-	
-	If ($data=Null:C1517)
-		return 4D:C1709.Blob.new()
-	Else 
-		return $data
+	If (This:C1470.dataFileHandle#Null:C1517) && ($data2Read>0)
+		
+		var $realAddress : Real
+		$realAddress:=$blockPosition*0x0080
+		If ($flIsNbOfBlocks)
+			$length:=$data2Read*0x0080
+		Else 
+			$length:=$data2Read
+		End if 
+		
+		This:C1470.dataFileHandle.offset:=$realAddress
+		
+		return Try(This:C1470.dataFileHandle.readBlob($length))
+		
 	End if 
