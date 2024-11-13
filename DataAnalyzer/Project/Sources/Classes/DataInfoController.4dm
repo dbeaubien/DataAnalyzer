@@ -5,6 +5,10 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx:={file: $dataFile; window: Current form window:C827}
 	$ctx.onFileInfo:=This:C1470._onFileInfo
 	$ctx.onTableInfo:=This:C1470._onTableInfo
+	$ctx.onFinish:=This:C1470._onFinish
+	$ctx.objectName:=OBJECT Get name:C1087(Object current:K67:2)
+	
+	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
 	
 	CALL WORKER:C1389(Current method name:C684; Formula:C1597(preemptiveWorker); $ctx)
 	
@@ -102,6 +106,8 @@ Function _open($ctx : Object)
 		End if 
 	End for each 
 	
+	CALL FORM:C1391($ctx.window; $ctx.onFinish; $ctx)
+	
 Function _onFileInfo($fileInfo : Object)
 	
 	Form:C1466.fileInfo:=$fileInfo
@@ -119,6 +125,6 @@ Function _onTableInfo($tableInfo : Object)
 		End for each 
 	End if 
 	
-Function fileDidOpen($ctx : Object)
+Function _onFinish($ctx : Object)
 	
-	TRACE:C157
+	OBJECT SET ENABLED:C1123(*; $ctx.objectName; True:C214)

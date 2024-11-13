@@ -36,7 +36,7 @@
 					"action": "gotoPage",
 					"bottom": 570
 				},
-				"Button": {
+				"open": {
 					"type": "button",
 					"text": "Button",
 					"top": 35,
@@ -46,7 +46,8 @@
 					"events": [
 						"onClick"
 					],
-					"method": "ObjectMethods/Button.4dm"
+					"method": "ObjectMethods/open.4dm",
+					"focusable": false
 				}
 			}
 		},
@@ -1012,7 +1013,7 @@
 			}
 		}
 	],
-	"geometryStamp": 329,
+	"geometryStamp": 330,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
