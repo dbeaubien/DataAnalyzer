@@ -211,52 +211,55 @@ Function isSignatureLittleEndian($data : 4D:C1709.Blob) : Boolean
 Function getBlockHeader($data : 4D:C1709.Blob; $byteSwap : Boolean) : Object
 	
 	$flNull:=False:C215
-	If ($data.size<28)
-		$flNull:=True:C214
-	Else 
-		var $blob : Blob
-		$blob:=$data.slice(0; 28)
-		$tag:=""
-		If ($byteSwap)
-			$swap:=PC byte ordering:K22:3
-			$swapName:="longSwap"
-			For ($i; 3; 0; -1)
-				$tag:=$tag+Char:C90($blob{$i})
-			End for 
+	
+	If (OB Instance of:C1731($data; 4D:C1709.Blob))
+		If ($data.size<28)
+			$flNull:=True:C214
 		Else 
-			$swap:=Macintosh byte ordering:K22:2
-			$swapName:="longNoSwap"
-			For ($i; 0; 3)
-				$tag:=$tag+Char:C90($blob{$i})
-			End for 
+			var $blob : Blob
+			$blob:=$data.slice(0; 28)
+			$tag:=""
+			If ($byteSwap)
+				$swap:=PC byte ordering:K22:3
+				$swapName:="longSwap"
+				For ($i; 3; 0; -1)
+					$tag:=$tag+Char:C90($blob{$i})
+				End for 
+			Else 
+				$swap:=Macintosh byte ordering:K22:2
+				$swapName:="longNoSwap"
+				For ($i; 0; 3)
+					$tag:=$tag+Char:C90($blob{$i})
+				End for 
+			End if 
+			
+			$offset:=0
+			$tagNum:=BLOB to longint:C551($blob; $swap; $offset)
+			$found:=False:C215
+			$typeName:=""
+			$headerSize:=0
+			
+			$blockLength:=BLOB to longint:C551($blob; $swap; $offset)  //Block length
+			$blockTS:=This:C1470.chunkToHex($blob; ->$offset; 8; False:C215)  //Block Timestamp
+			$blockCSNum:=BLOB to longint:C551($blob; Macintosh byte ordering:K22:2; $offset)  //Block Chechsum
+			$blockPos:=BLOB to longint:C551($blob; $swap; $offset)
+			$bockParent:=BLOB to longint:C551($blob; $swap; $offset)
+			
+			If ($tag="rec1")
+				$blockNbFields:=BLOB to longint:C551($blob; $swap; $offset)
+			Else 
+				$blockNbFields:=0
+			End if 
+			
+			$blockInfo:={}
+			$blockInfo.success:=True:C214
+			$blockInfo.resType:=$tag
+			$blockInfo.size:=$blockLength
+			$blockInfo.resTypeLong:=$tagNum
+			$blockInfo.position:=$blockPos
+			$blockInfo.offset:=$offset
+			
 		End if 
-		
-		$offset:=0
-		$tagNum:=BLOB to longint:C551($blob; $swap; $offset)
-		$found:=False:C215
-		$typeName:=""
-		$headerSize:=0
-		
-		$blockLength:=BLOB to longint:C551($blob; $swap; $offset)  //Block length
-		$blockTS:=This:C1470.chunkToHex($blob; ->$offset; 8; False:C215)  //Block Timestamp
-		$blockCSNum:=BLOB to longint:C551($blob; Macintosh byte ordering:K22:2; $offset)  //Block Chechsum
-		$blockPos:=BLOB to longint:C551($blob; $swap; $offset)
-		$bockParent:=BLOB to longint:C551($blob; $swap; $offset)
-		
-		If ($tag="rec1")
-			$blockNbFields:=BLOB to longint:C551($blob; $swap; $offset)
-		Else 
-			$blockNbFields:=0
-		End if 
-		
-		$blockInfo:={}
-		$blockInfo.success:=True:C214
-		$blockInfo.resType:=$tag
-		$blockInfo.size:=$blockLength
-		$blockInfo.resTypeLong:=$tagNum
-		$blockInfo.position:=$blockPos
-		$blockInfo.offset:=$offset
-		
 	End if 
 	
 	If ($flNull)

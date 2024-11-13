@@ -506,8 +506,8 @@ Function readTableDefinition($tableAddress : Object) : Object
 				
 			: ($resType="TDEF")
 				
-				$vUUID_TableID:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer ID; // of the table
-				$vTableName:=This:C1470.chunkToText($blDataBlock; ->$offset; 64; False:C215; True:C214)  //UniChar nom[kMaxTableNameNbWords]; // table name (32 bytes)
+				$vUUID_TableID:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)
+				$vTableName:=This:C1470.chunkToText($blDataBlock; ->$offset; 64; False:C215; True:C214)
 				
 				var $tableInfo : Object
 				$tableInfo:=This:C1470.tableInfo.query("tableUUID === :1"; $vUUID_TableID).first()
@@ -564,7 +564,14 @@ Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $rea
 			This:C1470.dataFileHandle.offset:=$realAddress
 		End if 
 		
-		return This:C1470.dataFileHandle.readBlob($blkSize)
+		var $data : 4D:C1709.Blob
+		$data:=Try(This:C1470.dataFileHandle.readBlob($blkSize))
+		
+		If ($data=Null:C1517)
+			return 4D:C1709.Blob.new()
+		Else 
+			return $data
+		End if 
 		
 	End if 
 	
@@ -580,5 +587,11 @@ Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : 
 	
 	This:C1470.dataFileHandle.offset:=$realAddress
 	
-	return This:C1470.dataFileHandle.readBlob($length)
+	var $data : 4D:C1709.Blob
+	$data:=Try(This:C1470.dataFileHandle.readBlob($length))
 	
+	If ($data=Null:C1517)
+		return 4D:C1709.Blob.new()
+	Else 
+		return $data
+	End if 
