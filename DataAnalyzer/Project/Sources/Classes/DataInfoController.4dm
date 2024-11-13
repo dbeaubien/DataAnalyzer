@@ -87,8 +87,16 @@ Function _open($ctx : Object)
 	CALL FORM:C1391($ctx.window; $ctx.onFileInfo; $fileInfo)
 	
 	var $tableInfo : Object
-	For each ($tableAddress; $dataInfo.tableAddresses)
+	
+	For each ($tableAddress; $dataInfo.tableAddress.DTab)
 		$tableInfo:=$dataInfo.readTableInfo($tableAddress)
+		If ($tableInfo#Null:C1517)
+			CALL FORM:C1391($ctx.window; $ctx.onTableInfo; $tableInfo)
+		End if 
+	End for each 
+	
+	For each ($tableAddress; $dataInfo.tableAddress.TDEF)
+		$tableInfo:=$dataInfo.readTableDefinition($tableAddress)
 		If ($tableInfo#Null:C1517)
 			CALL FORM:C1391($ctx.window; $ctx.onTableInfo; $tableInfo)
 		End if 
@@ -101,11 +109,14 @@ Function _onFileInfo($fileInfo : Object)
 Function _onTableInfo($tableInfo : Object)
 	
 	var $table : Object
-	$table:=Form:C1466.tableInfo.col.query("tableIndex === :1"; $tableInfo.tableIndex).first()
+	$table:=Form:C1466.tableInfo.col.query("tableNumber === :1"; $tableInfo.tableNumber).first()
 	If ($table=Null:C1517)
 		Form:C1466.tableInfo.col.push($tableInfo)
 	Else 
-		$table:=$tableInfo
+		var $attr : Text
+		For each ($attr; $tableInfo)
+			$table[$attr]:=$tableInfo[$attr]
+		End for each 
 	End if 
 	
 Function fileDidOpen($ctx : Object)

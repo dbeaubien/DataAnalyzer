@@ -122,6 +122,62 @@ Function chunkToHex($data : 4D:C1709.Blob; $offsetPtr : Pointer; $length : Integ
 	
 	return $result
 	
+Function chunkToText($data : 4D:C1709.Blob; $offsetPtr : Pointer; $length : Integer; $swap : Boolean; $short : Boolean) : Text
+	
+	var $offset : Integer
+	$offset:=$offsetPtr->
+	var $blob : Blob
+	$blob:=$data.slice($offset; $offset+$length)
+	
+	$offsetPtr->+=$length
+	
+	$length1:=$length
+	
+	var $result : Text
+	$l:=BLOB size:C605($blob)
+	
+	If ($l>0)
+		$offset2:=0
+		If ($short)
+			$length:=BLOB to integer:C549($blob; Native byte ordering:K22:1; $offset2)
+		Else 
+			$length:=BLOB to longint:C551($blob; Native byte ordering:K22:1; $offset2)
+		End if 
+		
+		If (($length<0) & $short)
+			$length:=-$length
+		End if 
+		
+		If ($short)
+			$flOK:=True:C214
+		Else 
+			$flOK:=(($length*2)+2+(2*Num:C11(Not:C34($short)))=$l)
+		End if 
+		
+		If ($flOK)
+			
+			If (($length>0) & ((($length*2)+4)<=$l))
+				
+				var $blob2 : Blob
+				SET BLOB SIZE:C606($blob2; 0)
+				COPY BLOB:C558($blob; $blob2; $offset2; 0; $length*2)
+				$result:=Convert to text:C1012($blob2; "utf-16")
+				If (Length:C16($result)>0)
+					For ($i; Length:C16($result); 1; -1)
+						If (Character code:C91($result[[$i]])<32)
+							$result:=Substring:C12($result; 1; $i-1)+Substring:C12($result; $i+1)
+						End if 
+					End for 
+				End if 
+			End if 
+			
+		Else 
+			
+		End if 
+	End if 
+	
+	return $result
+	
 Function expand($in : Object) : Object
 	
 	return OB Class:C1730($in).new($in.platformPath; fk platform path:K87:2)

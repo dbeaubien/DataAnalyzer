@@ -61,7 +61,7 @@ property sortHiraganaCodePointsFirstOnQuaternaryLevel : Boolean
 property useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator : Boolean
 property useTraditionalStyleSorting : Boolean
 property PAT_Addresses : Object
-property tableAddresses : Collection
+property tableAddress : Object
 property tableInfo : Collection
 
 Class extends Info
@@ -113,6 +113,9 @@ Class constructor
 	End for each 
 	
 	This:C1470.tableInfo:=[]
+	This:C1470.tableAddress:={}
+	This:C1470.tableAddress.TDEF:=[]
+	This:C1470.tableAddress.DTab:=[]
 	
 Function open($dataFile : 4D:C1709.File) : cs:C1710.DataInfo
 	
@@ -350,14 +353,15 @@ Function readFileInfo() : cs:C1710.DataInfo
 				seq1: This:C1470.toReal($vdt_SeqAddrTabAddr; False:C215)\0x0080\
 				}
 			
-			This:C1470.readDTab(This:C1470.PAT_Addresses.DTab)
+			This:C1470.readTable(This:C1470.PAT_Addresses.DTab; "DTab")
+			This:C1470.readTable(This:C1470.PAT_Addresses.TDEF; "TDEF")
 			
 		End if 
 	End if 
 	
 	return This:C1470
 	
-Function readDTab($tableAddress : Real) : cs:C1710.DataInfo
+Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 	
 	$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 	
@@ -369,7 +373,6 @@ Function readDTab($tableAddress : Real) : cs:C1710.DataInfo
 	End if 
 	
 	$level:=0
-	$tag:="DTab"
 	
 	$type:=This:C1470.blockType[$tag]
 	$blockSize:=This:C1470.blockSize
@@ -406,9 +409,14 @@ Function readDTab($tableAddress : Real) : cs:C1710.DataInfo
 		End for 
 	End if 
 	
-	This:C1470.tableAddresses:=$tableAddresses
+	This:C1470.tableAddress[$tag]:=$tableAddresses
 	
 	return This:C1470
+	
+	
+	
+	
+	
 	
 Function readTableInfo($tableAddress : Object) : Object
 	
@@ -431,7 +439,7 @@ Function readTableInfo($tableAddress : Object) : Object
 		Case of 
 			: ($resType="TabA")  //If more than 1024 tables
 				
-				This:C1470.readDTab($tableAddress.address)
+				This:C1470.readTable($tableAddress.address; "DTab")
 				
 			: ($resType="DTab")
 				
@@ -449,34 +457,95 @@ Function readTableInfo($tableAddress : Object) : Object
 				$offset:=$offset+16  //Infos not used here
 				$vUUID_TableDef:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer TableDefID;  // ID TDEF 
 				
-				$table:={}
-				$table.tableUUID_DTab:=$vUUID_TableDef
-				$table.tableIndex:=$tableNumber
-				$table.nbRecords:=$nb_Records
-				$table.nbBlobs:=$nb_Blobs
-				$table.address_Taba_rec1:=$addressOfTabaOf_rec1\$blockSize
-				$table.address_Taba_Blob:=$addressOfTabaOf_Blob\$blockSize
-				
 				var $tableInfo : Object
-				$tableInfo:=This:C1470.tableInfo.query("tableIndex === :1"; $tableNumber).first()
+				$tableInfo:=This:C1470.tableInfo.query("tableNumber === :1"; $tableNumber).first()
 				If ($tableInfo=Null:C1517)
-					This:C1470.tableInfo.push($table)
+					$tableInfo:={\
+						tableNumber: $tableNumber; \
+						tableUUID: $vUUID_TableDef; \
+						nbRecords: $nb_Records; \
+						nbBlobs: $nb_Blobs; \
+						address_Taba_rec1: $addressOfTabaOf_rec1\$blockSize; \
+						address_Taba_Blob: $addressOfTabaOf_Blob\$blockSize}
+					This:C1470.tableInfo.push($tableInfo)
 				Else 
-					$tableInfo:=$table
+					$tableInfo.tableUUID:=$vUUID_TableDef
+					$tableInfo.nbRecords:=$nb_Records
+					$tableInfo.nbBlobs:=$nb_Blobs
+					$tableInfo.address_Taba_rec1:=$addressOfTabaOf_rec1\$blockSize
+					$tableInfo.address_Taba_Blob:=$addressOfTabaOf_Blob\$blockSize
 				End if 
 				
-				return $table
+				return $tableInfo
 				
 		End case 
 		
 	End if 
 	
-Function readAllTableInfo() : Collection
+Function readTableDefinition($tableAddress : Object) : Object
+	
+	$segEOF:=This:C1470.toReal(This:C1470.logicalEOF; True:C214)
+	$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
+	$blockSize:=This:C1470.blockSize
+	
+	$blDataBlock:=This:C1470.readblocks($tableAddress.address; $tableAddress.length; False:C215)
+	
+	$offset:=0
+	$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)
+	
+	If ($headerInfo.success)
+		$offset:=$headerInfo.offset
+		$resType:=$headerInfo.resType
+		$blockLength:=$headerInfo.size
+		$resTypeLong:=$headerInfo.resTypeLong
+		
+		Case of 
+			: ($resType="TabA")  //If more than 1024 tables
+				
+				This:C1470.readTable($tableAddress.address; "TDEF")
+				
+			: ($resType="TDEF")
+				
+				$vUUID_TableID:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer ID; // of the table
+				$vTableName:=This:C1470.chunkToText($blDataBlock; ->$offset; 64; False:C215; True:C214)  //UniChar nom[kMaxTableNameNbWords]; // table name (32 bytes)
+				
+				var $tableInfo : Object
+				$tableInfo:=This:C1470.tableInfo.query("tableUUID === :1"; $vUUID_TableID).first()
+				If ($tableInfo=Null:C1517)
+					$tableInfo:={\
+						tableUUID: $vUUID_TableID; \
+						tableName: $vTableName}
+					This:C1470.tableInfo.push($tableInfo)
+				Else 
+					$tableInfo.tableName:=$vTableName
+				End if 
+				
+				return $tableInfo
+				
+		End case 
+		
+	End if 
+	
+Function readTableDefinitions() : Collection
 	
 	$tables:=[]
 	var $table : Object
 	
-	For each ($tableAddress; This:C1470.tableAddresses)
+	For each ($tableAddress; This:C1470.tableAddress.TDEF)
+		$table:=This:C1470.readTableDefinition($tableAddress)
+		If ($table#Null:C1517)
+			$tables.push($table)
+		End if 
+	End for each 
+	
+	return $tables
+	
+Function readTableInfos() : Collection
+	
+	$tables:=[]
+	var $table : Object
+	
+	For each ($tableAddress; This:C1470.tableAddress.DTab)
 		$table:=This:C1470.readTableInfo($tableAddress)
 		If ($table#Null:C1517)
 			$tables.push($table)

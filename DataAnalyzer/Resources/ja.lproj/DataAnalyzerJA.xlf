@@ -45,7 +45,56 @@
           <target>Indexes are in the same segment.</target>
         </trans-unit>
       </group>
-      
+      <group resname="tableInfo">
+        <trans-unit resname="Index">
+          <source>Index</source>
+          <target>Index</target>
+        </trans-unit>
+        <trans-unit resname="Table Name">
+          <source>Table Name</source>
+          <target>Table Name</target>
+        </trans-unit>
+        <trans-unit resname="UUID">
+          <source>UUID</source>
+          <target>UUID</target>
+        </trans-unit>
+        <trans-unit resname="Nb Records">
+          <source>Nb Records</source>
+          <target>Nb Records</target>
+        </trans-unit>
+        <trans-unit resname="Nb Blobs">
+          <source>Nb Blobs</source>
+          <target>Nb Blobs</target>
+        </trans-unit>
+        <trans-unit resname="Record Count">
+          <source>Record Count</source>
+          <target>Record Count</target>
+        </trans-unit>
+        <trans-unit resname="Size Records">
+          <source>Size Records</source>
+          <target>Size Records</target>
+        </trans-unit>
+        <trans-unit resname="Blob Count">
+          <source>Blob Count</source>
+          <target>Blob Count</target>
+        </trans-unit>
+        <trans-unit resname="Size Blobs">
+          <source>Size Blobs</source>
+          <target>Size Blobs</target>
+        </trans-unit>
+        <trans-unit resname="Max Record">
+          <source>Max Record</source>
+          <target>Max Record</target>
+        </trans-unit>
+        <trans-unit resname="Data Tables">
+          <source>Data Tables</source>
+          <target>Data Tables</target>
+        </trans-unit>
+        <trans-unit resname="Information">
+          <source>Information</source>
+          <target>Information</target>
+        </trans-unit>
+      </group>
     </body>
   </file>
 </xliff>
