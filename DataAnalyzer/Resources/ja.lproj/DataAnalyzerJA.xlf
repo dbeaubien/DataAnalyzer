@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="http://www.w3.org/1999/xhtml" version="1.0">
+  <file datatype="x-STR#" original="undefined" product-version="v20" source-language="en-US" target-language="ja">
+    <header>
+      <note/>
+    </header>
+    <body>
+      <group resname="lastOperation">
+        <trans-unit resname="The Cache has been correctly flushed">
+          <source>The Cache has been correctly flushed</source>
+          <target>The Cache has been correctly flushed</target>
+        </trans-unit>
+        <trans-unit resname="The Cache flushing has been interrupted!">
+          <source>The Cache flushing has been interrupted!</source>
+          <target>The Cache flushing has been interrupted!</target>
+        </trans-unit>
+        <trans-unit resname="Unknown Last Operation!">
+          <source>Unknown Last Operation!</source>
+          <target>Unknown Last Operation!</target>
+        </trans-unit>
+      </group>
+      <group resname="flags">
+        <trans-unit resname="Data File needs to be repaired.">
+          <source>Data File needs to be repaired.</source>
+          <target>Data File needs to be repaired.</target>
+        </trans-unit>
+        <trans-unit resname="Data File does not need to be repaired.">
+          <source>Data File does not need to be repaired.</source>
+          <target>Data File does not need to be repaired.</target>
+        </trans-unit>
+        <trans-unit resname="Data File contains Structure.">
+          <source>Data File contains Structure.</source>
+          <target>Data File contains Structure.</target>
+        </trans-unit>
+        <trans-unit resname="Data File contains Data.">
+          <source>Data File contains Data.</source>
+          <target>Data File contains Data.</target>
+        </trans-unit>
+        <trans-unit resname="Indexes are in a separate segment.">
+          <source>Indexes are in a separate segment.</source>
+          <target>Indexes are in a separate segment.</target>
+        </trans-unit>
+        <trans-unit resname="Indexes are in the same segment.">
+          <source>Indexes are in the same segment.</source>
+          <target>Indexes are in the same segment.</target>
+        </trans-unit>
+      </group>
+      
+    </body>
+  </file>
+</xliff>

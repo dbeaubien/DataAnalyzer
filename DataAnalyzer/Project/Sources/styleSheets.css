@@ -1,0 +1,21 @@
+header  {
+	font-weight: bold;
+}
+
+@media (prefers-color-scheme: light){
+
+	listbox.data {
+		alternateFill: #FAF0F0;
+		fill: automatic;
+	}
+
+}
+
+@media (prefers-color-scheme: dark){
+
+	listbox.data {
+		alternateFill: #200808;
+		fill: automatic;
+	}
+
+}

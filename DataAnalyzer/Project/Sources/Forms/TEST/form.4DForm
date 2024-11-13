@@ -1,0 +1,1021 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowSizingX": "variable",
+	"windowSizingY": "variable",
+	"windowMinWidth": 0,
+	"windowMinHeight": 0,
+	"windowMaxWidth": 32767,
+	"windowMaxHeight": 32767,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"events": [
+		"onLoad",
+		"onUnload"
+	],
+	"windowTitle": "",
+	"destination": "detailScreen",
+	"pages": [
+		{
+			"objects": {
+				"Tab Control": {
+					"type": "tab",
+					"text": "Tab control",
+					"top": 0,
+					"left": 0,
+					"width": 913,
+					"height": 523,
+					"sizingX": "grow",
+					"sizingY": "grow",
+					"labels": [
+						"list",
+						"information"
+					],
+					"action": "gotoPage"
+				}
+			}
+		},
+		{
+			"objects": {
+				"tableInfo": {
+					"type": "listbox",
+					"left": 20,
+					"top": 80,
+					"width": 1016,
+					"height": 445,
+					"events": [],
+					"listboxType": "collection",
+					"dataSource": "Form:C1466.tableInfo.col",
+					"currentItemSource": "Form:C1466.tableInfo.item",
+					"currentItemPositionSource": "Form:C1466.tableInfo.pos",
+					"selectedItemsSource": "Form:C1466.tableInfo.sel",
+					"horizontalLineStroke": "transparent",
+					"class": "data",
+					"staticColumnCount": 10,
+					"resizingMode": "legacy",
+					"sizingX": "grow",
+					"sizingY": "grow",
+					"columns": [
+						{
+							"header": {
+								"text": ":xliff:Index",
+								"name": "Header1"
+							},
+							"name": "Column1",
+							"footer": {
+								"name": "Footer1"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 70,
+							"dataSource": "This:C1470.tableIndex",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header2",
+								"text": ":xliff:Table Name"
+							},
+							"name": "Column2",
+							"footer": {
+								"name": "Footer2"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 150
+						},
+						{
+							"header": {
+								"name": "Header3",
+								"text": ":xliff:UUID"
+							},
+							"name": "Column3",
+							"footer": {
+								"name": "Footer3"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 150,
+							"dataSource": "This:C1470.tableUUID_DTab"
+						},
+						{
+							"header": {
+								"name": "Header4",
+								"text": ":xliff:Nb Records"
+							},
+							"name": "Column4",
+							"footer": {
+								"name": "Footer4"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.nbRecords",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header5",
+								"text": ":xliff:Nb Blobs"
+							},
+							"name": "Column5",
+							"footer": {
+								"name": "Footer5"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.nbBlobs",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header6",
+								"text": ":xliff:Record Count"
+							},
+							"name": "Column6",
+							"footer": {
+								"name": "Footer6"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90
+						},
+						{
+							"header": {
+								"name": "Header7",
+								"text": ":xliff:Size Records"
+							},
+							"name": "Column7",
+							"footer": {
+								"name": "Footer7"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90
+						},
+						{
+							"header": {
+								"name": "Header8",
+								"text": ":xliff:Blob Count"
+							},
+							"name": "Column8",
+							"footer": {
+								"name": "Footer8"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header9",
+								"text": ":xliff:Size Blobs"
+							},
+							"name": "Column9",
+							"footer": {
+								"name": "Footer9"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90
+						},
+						{
+							"header": {
+								"name": "Header10",
+								"text": ":xliff:Max Record"
+							},
+							"name": "Column10",
+							"footer": {
+								"name": "Footer10"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90
+						}
+					]
+				},
+				"Button": {
+					"type": "button",
+					"text": "Button",
+					"top": 15,
+					"left": 60,
+					"width": 123,
+					"height": 60,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/Button.4dm"
+				}
+			}
+		},
+		{
+			"objects": {
+				"dataFileVersion": {
+					"type": "input",
+					"left": 32,
+					"top": 24,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.dataFileVersion"
+				},
+				"isDataLittleEndian": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 242,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.isDataLittleEndian",
+					"enterable": false
+				},
+				"lastOperation": {
+					"type": "input",
+					"left": 32,
+					"top": 44,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.lastOperation",
+					"dataSourceTypeHint": "integer"
+				},
+				"lastOperationDescription": {
+					"type": "input",
+					"left": 32,
+					"top": 64,
+					"width": 375,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.lastOperationDescription",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfDataSegments": {
+					"type": "input",
+					"left": 32,
+					"top": 84,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataSegments",
+					"dataSourceTypeHint": "integer"
+				},
+				"productVersionCode": {
+					"type": "input",
+					"left": 32,
+					"top": 104,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.productVersionCode",
+					"dataSourceTypeHint": "integer"
+				},
+				"synchronizationIdentifier": {
+					"type": "input",
+					"left": 32,
+					"top": 124,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.synchronizationIdentifier",
+					"dataSourceTypeHint": "text"
+				},
+				"logicalEOF": {
+					"type": "input",
+					"left": 32,
+					"top": 144,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.logicalEOF",
+					"dataSourceTypeHint": "text"
+				},
+				"limitSegments": {
+					"type": "input",
+					"left": 32,
+					"top": 164,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.limitSegments",
+					"dataSourceTypeHint": "text"
+				},
+				"primaryBlockAllocationAddressTable": {
+					"type": "input",
+					"left": 32,
+					"top": 184,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.primaryBlockAllocationAddressTable",
+					"dataSourceTypeHint": "text"
+				},
+				"blockSize": {
+					"type": "input",
+					"left": 32,
+					"top": 204,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.blockSize",
+					"dataSourceTypeHint": "integer"
+				},
+				"hasSecondaryBlockAllocationAddressTable": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 262,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.hasSecondaryBlockAllocationAddressTable",
+					"enterable": false
+				},
+				"ratio": {
+					"type": "input",
+					"left": 32,
+					"top": 224,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.ratio",
+					"dataSourceTypeHint": "integer"
+				},
+				"ratio1": {
+					"type": "input",
+					"left": 32,
+					"top": 244,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.ratio",
+					"dataSourceTypeHint": "integer"
+				},
+				"addressTablesOfDataTablesAddress": {
+					"type": "input",
+					"left": 32,
+					"top": 264,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.addressTablesOfDataTablesAddress",
+					"dataSourceTypeHint": "integer"
+				},
+				"segmentHeaderAddress": {
+					"type": "input",
+					"left": 32,
+					"top": 284,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.segmentHeaderAddress",
+					"dataSourceTypeHint": "integer"
+				},
+				"segmentHeaderSize": {
+					"type": "input",
+					"left": 32,
+					"top": 304,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.segmentHeaderSize",
+					"dataSourceTypeHint": "integer"
+				},
+				"RandomValueToLinkWithIndexes": {
+					"type": "input",
+					"left": 32,
+					"top": 324,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.RandomValueToLinkWithIndexes",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfHeaderModifications": {
+					"type": "input",
+					"left": 32,
+					"top": 344,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfHeaderModifications",
+					"dataSourceTypeHint": "text"
+				},
+				"lastLogAction": {
+					"type": "input",
+					"left": 32,
+					"top": 364,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.lastLogAction",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfLogFiles": {
+					"type": "input",
+					"left": 32,
+					"top": 384,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfLogFiles",
+					"dataSourceTypeHint": "integer"
+				},
+				"randomValueForDuplicateIndexDetection": {
+					"type": "input",
+					"left": 32,
+					"top": 404,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.randomValueForDuplicateIndexDetection",
+					"dataSourceTypeHint": "text"
+				},
+				"addressTablesOfDataTablesSize": {
+					"type": "input",
+					"left": 32,
+					"top": 424,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.addressTablesOfDataTablesSize",
+					"dataSourceTypeHint": "integer"
+				},
+				"dataFileNeedsRepair": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 282,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.dataFileNeedsRepair",
+					"enterable": false
+				},
+				"dataFileContainsStructure": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 302,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.dataFileContainsStructure",
+					"enterable": false
+				},
+				"indexStoredInSeparateSegment": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 322,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexStoredInSeparateSegment",
+					"enterable": false
+				},
+				"indexStoredInSeparateSegment1": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 342,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexStoredInSeparateSegment",
+					"enterable": false
+				},
+				"addressTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 362,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.addressTableHasHoles",
+					"enterable": false
+				},
+				"firstHolePositionInAddressTable": {
+					"type": "input",
+					"left": 252,
+					"top": 104,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInAddressTable"
+				},
+				"dataTableHeadersAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 124,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.dataTableHeadersAddress"
+				},
+				"dataTableHeadersAddress1": {
+					"type": "input",
+					"left": 252,
+					"top": 144,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.dataTableHeadersAddress"
+				},
+				"numberOfDataTables": {
+					"type": "input",
+					"left": 252,
+					"top": 164,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataTables",
+					"dataSourceTypeHint": "integer"
+				},
+				"numberOfRelations": {
+					"type": "input",
+					"left": 252,
+					"top": 184,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfRelations",
+					"dataSourceTypeHint": "integer"
+				},
+				"firstHolePositionInRelationsTable": {
+					"type": "input",
+					"left": 252,
+					"top": 204,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInRelationsTable",
+					"dataSourceTypeHint": "text"
+				},
+				"relationsTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 382,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.relationsTableHasHoles",
+					"enterable": false
+				},
+				"relationsTableAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 224,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.relationsTableAddress",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfSequenceNumbers": {
+					"type": "input",
+					"left": 252,
+					"top": 244,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfSequenceNumbers",
+					"dataSourceTypeHint": "text"
+				},
+				"SequenceNumbersTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 402,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.SequenceNumbersTableHasHoles",
+					"enterable": false
+				},
+				"firstHolePositionInSequenceNumbersTable": {
+					"type": "input",
+					"left": 252,
+					"top": 264,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInSequenceNumbersTable",
+					"dataSourceTypeHint": "text"
+				},
+				"sequenceNumbersAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 284,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.sequenceNumbersAddress",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfIndexes": {
+					"type": "input",
+					"left": 252,
+					"top": 304,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfIndexes",
+					"dataSourceTypeHint": "integer"
+				},
+				"indexDefinitionsTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 422,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableHasHoles",
+					"enterable": false
+				},
+				"firstHolePositionInIndexDefinitionsTable": {
+					"type": "input",
+					"left": 252,
+					"top": 324,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInIndexDefinitionsTable",
+					"dataSourceTypeHint": "integer"
+				},
+				"indexDefinitionsTableAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 344,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableAddress",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfIndexesDefinedInStructure": {
+					"type": "input",
+					"left": 252,
+					"top": 364,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfIndexesDefinedInStructure",
+					"dataSourceTypeHint": "text"
+				},
+				"indexDefinitionsTableInStructureHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 442,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableInStructureHasHoles",
+					"enterable": false
+				},
+				"firstHolePositionInIndexDefinitionsTableInStructure": {
+					"type": "input",
+					"left": 252,
+					"top": 384,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInIndexDefinitionsTableInStructure",
+					"dataSourceTypeHint": "text"
+				},
+				"indexDefinitionsTableInStructureAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 404,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableInStructureAddress",
+					"dataSourceTypeHint": "text"
+				},
+				"extraPropertiesTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 462,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.extraPropertiesTableHasHoles",
+					"enterable": false
+				},
+				"extraPropertiesTableAddress": {
+					"type": "input",
+					"left": 252,
+					"top": 424,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.extraPropertiesTableAddress",
+					"dataSourceTypeHint": "text"
+				},
+				"extraPropertiesSize": {
+					"type": "input",
+					"left": 252,
+					"top": 444,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.extraPropertiesSize",
+					"dataSourceTypeHint": "text"
+				},
+				"addressTablesTableHasHoles": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 482,
+					"left": 445,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.addressTablesTableHasHoles",
+					"enterable": false
+				},
+				"firstHolePositionInAddressTablesTable": {
+					"type": "input",
+					"left": 252,
+					"top": 464,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.firstHolePositionInAddressTablesTable",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfDataFlushes": {
+					"type": "input",
+					"left": 252,
+					"top": 484,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataFlushes",
+					"dataSourceTypeHint": "text"
+				},
+				"dialectCode": {
+					"type": "input",
+					"left": 32,
+					"top": 464,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.dialectCode",
+					"dataSourceTypeHint": "integer"
+				},
+				"withICU": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 322,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.withICU",
+					"enterable": false
+				},
+				"ignoreWildCharInMiddle": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 342,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.ignoreWildCharInMiddle",
+					"enterable": false
+				},
+				"useSecondaryCollationStrengthForfMatching": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 362,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useSecondaryCollationStrengthForfMatching",
+					"enterable": false
+				},
+				"useQuaternaryCollationStrengthForSorting": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 382,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useQuaternaryCollationStrengthForSorting",
+					"enterable": false
+				},
+				"sortHiraganaCodePointsFirstOnQuaternaryLevel": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 402,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.sortHiraganaCodePointsFirstOnQuaternaryLevel",
+					"enterable": false
+				},
+				"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 422,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator",
+					"enterable": false
+				},
+				"useTraditionalStyleSorting": {
+					"type": "checkbox",
+					"text": "Checkbox",
+					"top": 442,
+					"left": 545,
+					"width": 162,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useTraditionalStyleSorting",
+					"enterable": false
+				}
+			}
+		}
+	],
+	"geometryStamp": 263,
+	"editor": {
+		"activeView": "View 1",
+		"defaultView": "View 1",
+		"views": {
+			"View 1": {}
+		}
+	}
+}
