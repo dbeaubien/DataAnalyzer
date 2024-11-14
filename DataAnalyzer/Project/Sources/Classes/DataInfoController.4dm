@@ -27,7 +27,7 @@ Function _open($ctx : Object)
 		"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator"; \
 		"sortHiraganaCodePointsFirstOnQuaternaryLevel"; \
 		"useQuaternaryCollationStrengthForSorting"; \
-		"useSecondaryCollationStrengthForfMatching"; \
+		"useSecondaryCollationStrengthForMatching"; \
 		"ignoreWildCharInMiddle"; \
 		"withICU"; \
 		"dialectCode"; \

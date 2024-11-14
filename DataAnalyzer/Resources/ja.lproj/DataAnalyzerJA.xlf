@@ -94,6 +94,102 @@
           <source>Information</source>
           <target>Information</target>
         </trans-unit>
+        <trans-unit resname="isDataLittleEndian">
+          <source>Is Data Little Endian</source>
+          <target>Is Data Little Endian</target>
+        </trans-unit>
+        <trans-unit resname="hasSecondaryBlockAllocationAddressTable">
+          <source>Has Secondary Block Allocation Address Table</source>
+          <target>Has Secondary Block Allocation Address Table</target>
+        </trans-unit>
+        <trans-unit resname="dataFileNeedsRepair">
+          <source>Data File Needs Repair</source>
+          <target>Data File Needs Repair</target>
+        </trans-unit>
+        <trans-unit resname="dataFileContainsStructure">
+          <source>Data File Contains Structure</source>
+          <target>Data File Contains Structure</target>
+        </trans-unit>
+        <trans-unit resname="indexStoredInSeparateSegment">
+          <source>Index Stored In Separate Segment</source>
+          <target>Index Stored In Separate Segment</target>
+        </trans-unit>
+        <trans-unit resname="addressTableHasHoles">
+          <source>Address Table Has Holes</source>
+          <target>Address Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="relationsTableHasHoles">
+          <source>Relations Table Has Holes</source>
+          <target>Relations Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="sequenceNumbersTableHasHoles">
+          <source>Sequence Numbers Table Has Holes</source>
+          <target>Sequence Numbers Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="indexDefinitionsTableHasHoles">
+          <source>Index Definitions Table Has Holes</source>
+          <target>Index Definitions Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="indexDefinitionsTableInStructureHasHoles">
+          <source>Index Definitions Table In Structure Has Holes</source>
+          <target>Index Definitions Table In Structure Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="extraPropertiesTableHasHoles">
+          <source>Extra Properties Table Has Holes</source>
+          <target>Extra Properties Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="addressTablesTableHasHoles">
+          <source>Address Tables Table Has Holes</source>
+          <target>Address Tables Table Has Holes</target>
+        </trans-unit>
+        <trans-unit resname="withICU">
+          <source>With ICU</source>
+          <target>With ICU</target>
+        </trans-unit>
+        <trans-unit resname="ignoreWildCharInMiddle">
+          <source>Ignore Wild Char In Middle</source>
+          <target>Ignore Wild Char In Middle</target>
+        </trans-unit>
+        <trans-unit resname="useSecondaryCollationStrengthForMatching">
+          <source>Use Secondary Collation Strength For Matching</source>
+          <target>Use Secondary Collation Strength For Matching</target>
+        </trans-unit>
+        <trans-unit resname="useQuaternaryCollationStrengthForSorting">
+          <source>Use Quaternary Collation Strength For Sorting</source>
+          <target>Use Quaternary Collation Strength For Sorting</target>
+        </trans-unit>
+        <trans-unit resname="sortHiraganaCodePointsFirstOnQuaternaryLevel">
+          <source>Sort Hiragana Code Points First On Quaternary Level</source>
+          <target>Sort Hiragana Code Points First On Quaternary Level</target>
+        </trans-unit>
+        <trans-unit resname="useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator">
+          <source>Use Language Neutral Deadchar Algorithm Instead Of Break Iterator</source>
+          <target>Use Language Neutral Deadchar Algorithm Instead Of Break Iterator</target>
+        </trans-unit>
+        <trans-unit resname="useTraditionalStyleSorting">
+          <source>Use Traditional Style Sorting</source>
+          <target>Use Traditional Style Sorting</target>
+        </trans-unit>
+        <trans-unit resname="">
+          <source></source>
+          <target></target>
+        </trans-unit>
+        <trans-unit resname="">
+          <source></source>
+          <target></target>
+        </trans-unit>
+        <trans-unit resname="">
+          <source></source>
+          <target></target>
+        </trans-unit>
+        <trans-unit resname="">
+          <source></source>
+          <target></target>
+        </trans-unit>
+        <trans-unit resname="">
+          <source></source>
+          <target></target>
+        </trans-unit>
       </group>
     </body>
   </file>

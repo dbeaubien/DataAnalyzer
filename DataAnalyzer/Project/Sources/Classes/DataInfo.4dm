@@ -55,7 +55,7 @@ property dialectCode : Integer
 property dialectDescription : Text
 property withICU : Boolean
 property ignoreWildCharInMiddle : Boolean
-property useSecondaryCollationStrengthForfMatching : Boolean
+property useSecondaryCollationStrengthForMatching : Boolean
 property useQuaternaryCollationStrengthForSorting : Boolean
 property sortHiraganaCodePointsFirstOnQuaternaryLevel : Boolean
 property useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator : Boolean
@@ -336,7 +336,7 @@ Function readFileInfo() : cs:C1710.DataInfo
 			
 			This:C1470.withICU:=$vdt_Collator ?? 0
 			This:C1470.ignoreWildCharInMiddle:=$vdt_Collator ?? 1
-			This:C1470.useSecondaryCollationStrengthForfMatching:=$vdt_Collator ?? 2
+			This:C1470.useSecondaryCollationStrengthForMatching:=$vdt_Collator ?? 2
 			This:C1470.useQuaternaryCollationStrengthForSorting:=$vdt_Collator ?? 3
 			This:C1470.sortHiraganaCodePointsFirstOnQuaternaryLevel:=$vdt_Collator ?? 4
 			This:C1470.useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator:=$vdt_Collator ?? 5
