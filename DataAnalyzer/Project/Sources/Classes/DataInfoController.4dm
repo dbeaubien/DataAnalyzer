@@ -115,7 +115,8 @@ Function _onFileInfo($fileInfo : Object)
 Function _onTableInfo($tableInfo : Object)
 	
 	var $table : Object
-	$table:=Form:C1466.tableInfo.col.query("tableNumber === :1"; $tableInfo.tableNumber).first()
+	
+	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableInfo.tableUUID).first()
 	If ($table=Null:C1517)
 		Form:C1466.tableInfo.col.push($tableInfo)
 	Else 

@@ -564,8 +564,11 @@ Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $rea
 			This:C1470.dataFileHandle.offset:=$realAddress
 		End if 
 		
-		return Try(This:C1470.dataFileHandle.readBlob($blkSize))
-		
+		If (This:C1470.isTryAvailable)
+			return Try(This:C1470.dataFileHandle.readBlob($blkSize))
+		Else 
+			return This:C1470.dataFileHandle.readBlob($blkSize)
+		End if 
 	End if 
 	
 Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : Boolean) : 4D:C1709.Blob
@@ -582,6 +585,9 @@ Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : 
 		
 		This:C1470.dataFileHandle.offset:=$realAddress
 		
-		return Try(This:C1470.dataFileHandle.readBlob($length))
-		
+		If (This:C1470.isTryAvailable)
+			return Try(This:C1470.dataFileHandle.readBlob($length))
+		Else 
+			return This:C1470.dataFileHandle.readBlob($length)
+		End if 
 	End if 

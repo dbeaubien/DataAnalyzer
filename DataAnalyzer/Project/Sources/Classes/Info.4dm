@@ -1,4 +1,18 @@
+property isThrowAvailable : Boolean
+property isTryAvailable : Boolean
+
 Class constructor
+	
+	This:C1470._isThrowAvailable:=($version>="2020")
+	This:C1470._isTryAvailable:=($version>="2040")
+	
+Function get isThrowAvailable() : Boolean
+	
+	return This:C1470._isThrowAvailable
+	
+Function get isTryAvailable() : Boolean
+	
+	return This:C1470._isTryAvailable
 	
 Function addressToOffset($address : Text; $swap : Boolean) : Real
 	
