@@ -2,6 +2,20 @@
 
 based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=77253)
 
+## Modifications
+
+* resolve data file alias or shortcut
+* use file handle instead of receive packet
+* runs in background preemptive process in compiled mode
+* runs mulitple parallel workers in compiled mode
+
+## TODO 
+
+- [ ] export JSON
+- [ ] export XLSX
+- [ ] support headless / tool4d
+- [ ] support console output
+
 ## page 1
 
 analysis starts as soon as data file is selected or dropped on the listbox
