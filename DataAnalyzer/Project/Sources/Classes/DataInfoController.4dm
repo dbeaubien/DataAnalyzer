@@ -202,20 +202,21 @@ Function _open($ctx : Object)
 	
 	var $tableStats : cs:C1710._TableStats
 	
-	For each ($tableInfo; $dataInfo.tableInfo)
-		
-		$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
-		
-		If ($ctx.useMultipleCores)
-			$workerName:=$workerNames[$tableInfo.tableNumber%$ctx.countCores]
-			CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
-		Else 
-			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
-			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
-			$dataInfo.gotTableStats($tableStats; $ctx)
-		End if 
-		
-	End for each 
+	If ($dataInfo.tableInfo.length=0)
+		CALL FORM:C1391($ctx.window; $ctx.onFinish; {tableUUID: ""}; $ctx)
+	Else 
+		For each ($tableInfo; $dataInfo.tableInfo)
+			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
+			If ($ctx.useMultipleCores)
+				$workerName:=$workerNames[$tableInfo.tableNumber%$ctx.countCores]
+				CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
+			Else 
+				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
+				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
+				$dataInfo.gotTableStats($tableStats; $ctx)
+			End if 
+		End for each 
+	End if 
 	
 Function _onTableStats($tableStats : Object)
 	
