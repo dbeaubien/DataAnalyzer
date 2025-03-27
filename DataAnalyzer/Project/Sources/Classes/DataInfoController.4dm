@@ -233,7 +233,8 @@ Function _open($ctx : Object)
 	var $workerFunction : 4D:C1709.Function
 	
 	$workerFunction:=$ctx.workerFunction
-	$workerNames:=$ctx.workerNames
+	$workerNames:=$ctx.workerNames.copy()
+	$workerNames.remove($workerNames.indexOf(Current process name:C1392))
 	
 	var $dataInfo2 : cs:C1710.DataInfo
 	$dataInfo2:=$dataInfo.clone()
@@ -243,13 +244,23 @@ Function _open($ctx : Object)
 	If ($dataInfo.tableInfo.length=0)
 		CALL FORM:C1391($ctx.window; $ctx.onFinish; {tableUUID: ""}; $ctx)
 	Else 
-		$i:=0
+		$idx:=0
 		For each ($tableInfo; $dataInfo.tableInfo)
+			$idx+=1
+			$last:=($idx=$dataInfo.tableInfo.length)
 			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
-			If ($ctx.useMultipleCores)
-				$i+=1
-				$workerName:=$workerNames[$i%$ctx.countCores]
-				CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
+			If ($ctx.useMultipleCores) && (Not:C34($last))
+				Repeat 
+					$processes:=Process activity:C1495(Processes only:K5:35).processes.query("name in :1 and state == :2"; $workerNames; Waiting for user event:K13:9)
+					If ($processes.length=0)
+						DELAY PROCESS:C323(Current process:C322; 10)
+					Else 
+						$process:=$processes[0].number
+						break
+					End if 
+				Until (False:C215)
+				CALL WORKER:C1389($process; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
+				DELAY PROCESS:C323(Current process:C322; 10)
 			Else 
 				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
 				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
