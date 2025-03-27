@@ -2,17 +2,39 @@ property countCores : Integer
 property useMultipleCores : Boolean
 property hideTableNames : Boolean
 property isRunning : Boolean
+property JSON : Object
 
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Is compiled mode:C492)
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is compiled mode)
 	If (This:C1470.useMultipleCores)
 		This:C1470.countCores-=2  //save for UI and system
 	End if 
 	
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
+	This:C1470.JSON:={}
+	
+Function _getWorkerName($i : Integer) : Text
+	
+	If ($i=0)
+		return "DataAnalyzer"
+	Else 
+		return ["DataAnalyzer"; " "; "("; $i; ")"].join("")
+	End if 
+	
+Function toggleExportButton() : cs:C1710.DataInfoController
+	
+	If (This:C1470.isRunning) || (OB Is empty:C1297(This:C1470.JSON))
+		OBJECT SET ENABLED:C1123(*; "exportJ"; False:C215)
+		OBJECT SET ENABLED:C1123(*; "exportX"; False:C215)
+	Else 
+		OBJECT SET ENABLED:C1123(*; "exportJ"; True:C214)
+		OBJECT SET ENABLED:C1123(*; "exportX"; True:C214)
+	End if 
+	
+	return This:C1470
 	
 Function toggleTableNames() : cs:C1710.DataInfoController
 	
@@ -75,6 +97,7 @@ Function onDrop()
 Function open($dataFile : 4D:C1709.File)
 	
 	Form:C1466.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
+	This:C1470.JSON:={}
 	
 	$ctx:={file: $dataFile; window: Current form window:C827}
 	$ctx.onFileInfo:=This:C1470._onFileInfo
@@ -84,13 +107,35 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx.objectName:="open"
 	$ctx.countCores:=This:C1470.countCores
 	$ctx.useMultipleCores:=This:C1470.useMultipleCores
+	$ctx.workerFunction:=Formula:C1597(_DataAnalyzer)
 	
 	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
 	This:C1470.isRunning:=True:C214
 	
-	$workerName:="DataAnalyzer"
-	CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
-	CALL WORKER:C1389($workerName; This:C1470._open; $ctx)
+	Form:C1466.toggleExportButton()
+	
+	var $workerNames : Collection
+	var $workerName : Text
+	
+	$workerNames:=[]
+	
+	If (This:C1470.useMultipleCores)
+		For ($i; 1; This:C1470.countCores)
+			$workerName:=This:C1470._getWorkerName($i)
+			$workerNames.push($workerName)
+		End for 
+	Else 
+		$workerName:=This:C1470._getWorkerName(0)
+		$workerNames.push($workerName)
+	End if 
+	
+	$ctx.workerNames:=$workerNames
+	
+	For each ($workerName; $workerNames)
+		CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
+	End for each 
+	
+	CALL WORKER:C1389($workerNames[0]; This:C1470._open; $ctx)
 	
 Function _open($ctx : Object)
 	
@@ -186,16 +231,9 @@ Function _open($ctx : Object)
 	
 	var $workerNames : Collection
 	var $workerFunction : 4D:C1709.Function
-	$workerFunction:=Formula:C1597(_DataAnalyzer)
 	
-	If ($ctx.useMultipleCores)
-		$workerNames:=[]
-		For ($i; 1; $ctx.countCores)
-			$workerName:=["DataAnalyzer"; " "; "("; $i; ")"].join("")
-			$workerNames.push($workerName)
-			CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
-		End for 
-	End if 
+	$workerFunction:=$ctx.workerFunction
+	$workerNames:=$ctx.workerNames
 	
 	var $dataInfo2 : cs:C1710.DataInfo
 	$dataInfo2:=$dataInfo.clone()
@@ -205,10 +243,12 @@ Function _open($ctx : Object)
 	If ($dataInfo.tableInfo.length=0)
 		CALL FORM:C1391($ctx.window; $ctx.onFinish; {tableUUID: ""}; $ctx)
 	Else 
+		$i:=0
 		For each ($tableInfo; $dataInfo.tableInfo)
 			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
 			If ($ctx.useMultipleCores)
-				$workerName:=$workerNames[$tableInfo.tableNumber%$ctx.countCores]
+				$i+=1
+				$workerName:=$workerNames[$i%$ctx.countCores]
 				CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
 			Else 
 				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
@@ -262,13 +302,36 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 	var $table : Object
 	
 	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
-	If ($table=Null:C1517)
-		
-	Else 
+	
+	If ($table#Null:C1517)
 		$table.complete:=$tableStats.complete
 	End if 
 	
 	If (Form:C1466.tableInfo.col.query("complete === :1"; True:C214).length=Form:C1466.tableInfo.col.length)
 		OBJECT SET ENABLED:C1123(*; $ctx.objectName; True:C214)
 		Form:C1466.isRunning:=False:C215
+		
+		Form:C1466.JSON.data:=Form:C1466.tableInfo.col.extract(\
+			"tableNumber"; "tableNumber"; \
+			"tableName"; "tableName"; \
+			"tableUUID"; "tableUUID"; \
+			"nbRecords"; "records.number"; \
+			"countOf_rec1"; "records.count"; \
+			"sizeOf_rec1"; "records.size"; \
+			"maxOf_rec1"; "records.max"; \
+			"minOf_rec1"; "records.min"; \
+			"avgOf_rec1"; "records.average"; \
+			"nbBlobs"; "records.number"; \
+			"countOf_blob"; "blobs.count"; \
+			"sizeOf_blob"; "blobs.size"; \
+			"maxOf_blob"; "blobs.max"; \
+			"minOf_blob"; "blobs.min"; \
+			"avgOf_blob"; "blobs.average")
+		
+		Form:C1466.JSON.info:=Form:C1466.fileInfo
+		
+		Form:C1466.toggleExportButton()
+		For each ($workerName; $ctx.workerNames)
+			KILL WORKER:C1390($workerName)
+		End for each 
 	End if 

@@ -66,6 +66,7 @@ property tableInfo : Collection
 property blockType : Object
 property numberOfDataSegments : Integer
 property addressTablesOfDataTablesAddress : Text
+property interval : Integer
 
 Class extends Info
 
@@ -119,6 +120,8 @@ Class constructor
 	This:C1470.tableAddress:={}
 	This:C1470.tableAddress.TDEF:=[]
 	This:C1470.tableAddress.DTab:=[]
+	
+	This:C1470.interval:=49
 	
 Function clone() : cs:C1710.DataInfo
 	
@@ -429,6 +432,8 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 		$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 		$blockSize:=This:C1470.blockSize
 		
+		$interval:=This:C1470.interval
+		
 		$level:=0
 		$type:=This:C1470.blockType.Taba
 		$nbBlocks:=96+1
@@ -467,6 +472,7 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 			ARRAY REAL:C219($arAddresses; $vTableIdx)
 			ARRAY REAL:C219($arLengths; $vTableIdx)
 			For ($i; 1; $vTableIdx)
+				$time:=Milliseconds:C459
 				If (($arAddresses{$i}=-1) | ($arLengths{$i}=-1))
 					
 				Else 
@@ -552,8 +558,12 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 						End case 
 					End if 
 				End if 
-				$didUpdateForm:=True:C214
-				CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+				$ms:=Milliseconds:C459
+				If (($ms-$time)>$interval)
+					$time:=$ms
+					$didUpdateForm:=True:C214
+					CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+				End if 
 			End for 
 		End if 
 	End if 

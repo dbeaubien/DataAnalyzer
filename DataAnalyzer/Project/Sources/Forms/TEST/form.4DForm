@@ -64,6 +64,7 @@
 					"dropping": "custom",
 					"method": "ObjectMethods/tableInfo.4dm",
 					"selectionMode": "multiple",
+					"lockedColumnCount": 3,
 					"columns": [
 						{
 							"header": {
@@ -344,6 +345,33 @@
 					"dataSource": "Form:C1466.hideTableNames",
 					"method": "ObjectMethods/hideTableNames.4dm",
 					"focusable": false
+				},
+				"exportJ": {
+					"type": "button",
+					"text": ":xliff:Export JSON…",
+					"top": 30,
+					"left": 794,
+					"width": 176,
+					"height": 22,
+					"events": [
+						"onLoad",
+						"onClick"
+					],
+					"focusable": false,
+					"method": "ObjectMethods/exportJ.4dm"
+				},
+				"exportX": {
+					"type": "button",
+					"text": ":xliff:Export XLSX…",
+					"top": 30,
+					"left": 974,
+					"width": 176,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"focusable": false,
+					"method": "ObjectMethods/exportX.4dm"
 				}
 			}
 		},
@@ -1320,7 +1348,7 @@
 			}
 		}
 	],
-	"geometryStamp": 1437,
+	"geometryStamp": 1511,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
@@ -1328,5 +1356,6 @@
 			"View 1": {}
 		}
 	},
-	"method": "method.4dm"
+	"method": "method.4dm",
+	"menuBar": "Barre #1"
 }
