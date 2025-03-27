@@ -556,7 +556,7 @@ Function readTableInfos() : Collection
 	
 Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $realAddress : Real) : 4D:C1709.Blob
 	
-	If (This:C1470.dataFileHandle#Null:C1517) && ($blkSize>0) && (Length:C16($address)#0)
+	If (This:C1470.dataFileHandle#Null:C1517) && (Not:C34(This:C1470.dataFileHandle.eof)) && ($blkSize>0) && (Length:C16($address)#0)
 		
 		If (Count parameters:C259<4)
 			This:C1470.dataFileHandle.offset:=This:C1470.addressToOffset($address; (Count parameters:C259<3) ? True:C214 : $flByteSwap)
@@ -573,7 +573,7 @@ Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $rea
 	
 Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : Boolean) : 4D:C1709.Blob
 	
-	If (This:C1470.dataFileHandle#Null:C1517) && ($data2Read>0)
+	If (This:C1470.dataFileHandle#Null:C1517) && (Not:C34(This:C1470.dataFileHandle.eof)) && ($data2Read>0)
 		
 		var $realAddress : Real
 		$realAddress:=$blockPosition*0x0080
