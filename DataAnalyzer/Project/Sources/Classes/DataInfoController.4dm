@@ -3,6 +3,7 @@ property useMultipleCores : Boolean
 property hideTableNames : Boolean
 property isRunning : Boolean
 property JSON : Object
+property exportFileJson : 4D:C1709.File
 
 Class constructor
 	
@@ -15,6 +16,72 @@ Class constructor
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
+	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
+	
+Function toJson() : 4D:C1709.File
+	
+	var $fileName : cs:C1710.FileName
+	$fileName:=cs:C1710.FileName.new(This:C1470.exportFileJson)
+	
+	var $file : 4D:C1709.File
+	$file:=$fileName.file
+	
+	$file.setText(JSON Stringify:C1217(Form:C1466.JSON; *))
+	
+	return $file
+	
+Function toXlsx() : 4D:C1709.File
+	
+	var $XLSX : cs:C1710.XLSX
+	$XLSX:=cs:C1710.XLSX.new()
+	
+	$file:=File:C1566("/RESOURCES/XLSX/DataAnalyzer.xlsx")
+	$status:=$XLSX.read($file)
+	
+	$values:={}
+	
+	var $value : Object
+	var $i : Integer
+	
+	$i:=1
+	
+	For each ($value; Form:C1466.JSON.data)
+		
+		$i+=1
+		$idx:=String:C10($i)
+		
+		$values["A"+$idx]:=$value.tableNumber
+		$values["B"+$idx]:=$value.tableName
+		$values["C"+$idx]:=$value.tableUUID
+		$values["D"+$idx]:=$value.records.number
+		$values["E"+$idx]:=$value.records.count
+		$values["F"+$idx]:=$value.records.size
+		$values["G"+$idx]:=$value.records.max
+		$values["H"+$idx]:=$value.records.min
+		$values["I"+$idx]:=$value.records.average
+		$values["J"+$idx]:=$value.blob.number
+		$values["K"+$idx]:=$value.blob.count
+		$values["L"+$idx]:=$value.blob.size
+		$values["M"+$idx]:=$value.blob.max
+		$values["N"+$idx]:=$value.blob.min
+		$values["O"+$idx]:=$value.blob.average
+		
+	End for each 
+	
+	$status:=$XLSX.setValues($values; 1)
+	$file:=Folder:C1567(fk desktop folder:K87:19).file($file.fullName)
+	$file:=cs:C1710.FileName.new($file).file
+	$status:=$XLSX.write($file)
+	
+	return $file
+	
+Function launch($file : 4D:C1709.File)
+	
+	OPEN URL:C673($file.platformPath)
+	
+Function show($file : 4D:C1709.File)
+	
+	SHOW ON DISK:C922($file.platformPath)
 	
 Function _getWorkerName($i : Integer) : Text
 	
@@ -31,7 +98,7 @@ Function toggleExportButton() : cs:C1710.DataInfoController
 		OBJECT SET ENABLED:C1123(*; "exportX"; False:C215)
 	Else 
 		OBJECT SET ENABLED:C1123(*; "exportJ"; True:C214)
-		OBJECT SET ENABLED:C1123(*; "exportX"; True:C214)
+		OBJECT SET ENABLED:C1123(*; "exportX"; This:C1470.JSON.data.length#0)
 	End if 
 	
 	return This:C1470
@@ -332,7 +399,7 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 			"maxOf_rec1"; "records.max"; \
 			"minOf_rec1"; "records.min"; \
 			"avgOf_rec1"; "records.average"; \
-			"nbBlobs"; "records.number"; \
+			"nbBlobs"; "blobs.number"; \
 			"countOf_blob"; "blobs.count"; \
 			"sizeOf_blob"; "blobs.size"; \
 			"maxOf_blob"; "blobs.max"; \
