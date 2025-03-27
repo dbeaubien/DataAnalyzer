@@ -3,16 +3,22 @@ property isTryAvailable : Boolean
 
 Class constructor
 	
+	//%W-550.26
 	This:C1470._isThrowAvailable:=($version>="2020")
 	This:C1470._isTryAvailable:=($version>="2040")
+	//%W+550.26
 	
 Function get isThrowAvailable() : Boolean
 	
+	//%W-550.26
 	return This:C1470._isThrowAvailable
+	//%W+550.26
 	
 Function get isTryAvailable() : Boolean
 	
+	//%W-550.26
 	return This:C1470._isTryAvailable
+	//%W+550.26
 	
 Function addressToOffset($address : Text; $swap : Boolean) : Real
 	
@@ -260,7 +266,7 @@ Function getBlockHeader($data : 4D:C1709.Blob; $byteSwap : Boolean) : Object
 			$bockParent:=BLOB to longint:C551($blob; $swap; $offset)
 			
 			If ($tag="rec1")
-				$blockNbFields:=BLOB to longint:C551($blob; $swap; $offset)
+				$blockNbFields:=BLOB to longint:C551($data; $swap; $offset)
 			Else 
 				$blockNbFields:=0
 			End if 
@@ -391,7 +397,7 @@ Function toReal($value : Text; $swap : Boolean) : Real
 			$result:=This:C1470.hex2Num($longHex; True:C214)
 			
 		: ($l<=12)  // We use for addresses FFFF FFFF FFFF = 2^48 = 281 474 976 710 655 = 281 Tb
-			$result:=This:C1470.hex2Real($longHex; True:C214)
+			$result:=This:C1470.hex2Real($longHex)
 			
 		: ($l<=16)
 			$sign:=1

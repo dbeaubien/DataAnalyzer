@@ -86,6 +86,102 @@
           <source>Max Record</source>
           <target>Max Record</target>
         </trans-unit>
+        <trans-unit resname="Min Record">
+          <source>Min Record</source>
+          <target>Min Record</target>
+        </trans-unit>
+        <trans-unit resname="Avg Record">
+          <source>Avg Record</source>
+          <target>Avg Record</target>
+        </trans-unit>
+        <trans-unit resname="Max Blob">
+          <source>Max Blob</source>
+          <target>Max Blob</target>
+        </trans-unit>
+        <trans-unit resname="Min Blob">
+          <source>Min Blob</source>
+          <target>Min Blob</target>
+        </trans-unit>
+        <trans-unit resname="Avg Blob">
+          <source>Avg Blob</source>
+          <target>Avg Blob</target>
+        </trans-unit>
+        <trans-unit resname="Data File Properties">
+          <source>Data File Properties</source>
+          <target>Data File Properties</target>
+        </trans-unit>
+        <trans-unit resname="Last Operation:">
+          <source>Last Operation:</source>
+          <target>Last Operation:</target>
+        </trans-unit>
+        <trans-unit resname="Block Size:">
+          <source>Block Size:</source>
+          <target>Block Size:</target>
+        </trans-unit>
+        <trans-unit resname="Product Version:">
+          <source>Product Version:</source>
+          <target>Product Version:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Tables:">
+          <source>Number Of Tables:</source>
+          <target>Number Of Tables:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Address Tables:">
+          <source>Number Of Address Tables:</source>
+          <target>Number Of Address Tables:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Relations:">
+          <source>Number Of Relations:</source>
+          <target>Number Of Relations:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Sequence Numbers:">
+          <source>Number Of Sequence Numbers:</source>
+          <target>Number Of Sequence Numbers:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Indexes:">
+          <source>Number Of Indexes:</source>
+          <target>Number Of Indexes:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Indexes Defined In Catalog:">
+          <source>Number Of Indexes Defined In Catalog:</source>
+          <target>Number Of Indexes Defined In Catalog:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Data Flushes:">
+          <source>Number Of Data Flushes:</source>
+          <target>Number Of Data Flushes:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Header Modifications:">
+          <source>Number Of Header Modifications:</source>
+          <target>Number Of Header Modifications:</target>
+        </trans-unit>
+        <trans-unit resname="Number Of Journal Files:">
+          <source>Number Of Journal Files:</source>
+          <target>Number Of Journal Files:</target>
+        </trans-unit>
+        <trans-unit resname="Language Code:">
+          <source>Language Code:</source>
+          <target>Language Code:</target>
+        </trans-unit>
+        <trans-unit resname="Last Operation Number:">
+          <source>Last Operation Number:</source>
+          <target>Last Operation Number:</target>
+        </trans-unit>
+        
+        <trans-unit resname="Data File Version:">
+          <source>Data File Version:</source>
+          <target>Data File Version:</target>
+        </trans-unit>
+        
+        
+        
+        <trans-unit resname="Select Data File…">
+          <source>Select Data File…</source>
+          <target>Select Data File…</target>
+        </trans-unit>
+        <trans-unit resname="…Or Drag and Drop">
+          <source>…Or Drag and Drop</source>
+          <target>…Or Drag and Drop</target>
+        </trans-unit>
         <trans-unit resname="Data Tables">
           <source>Data Tables</source>
           <target>Data Tables</target>

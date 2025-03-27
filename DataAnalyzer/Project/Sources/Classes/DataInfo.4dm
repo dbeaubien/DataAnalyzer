@@ -18,7 +18,7 @@ property indexStoredInSeparateSegment : Boolean
 property addressTablesOfDataTablesSize : Integer
 property randomValueForDuplicateIndexDetection : Text
 property numberOfLogFiles : Integer
-property lastLogAction : Text
+property lastLogAction : Real
 property numberOfHeaderModifications : Integer
 property randomValueToLinkWithIndexes : Text
 property segmentHeaderSize : Integer
@@ -63,6 +63,9 @@ property useTraditionalStyleSorting : Boolean
 property PAT_Addresses : Object
 property tableAddress : Object
 property tableInfo : Collection
+property blockType : Object
+property numberOfDataSegments : Integer
+property addressTablesOfDataTablesAddress : Text
 
 Class extends Info
 
@@ -117,6 +120,16 @@ Class constructor
 	This:C1470.tableAddress.TDEF:=[]
 	This:C1470.tableAddress.DTab:=[]
 	
+Function clone() : cs:C1710.DataInfo
+	
+	var $that : cs:C1710.DataInfo
+	
+	If (This:C1470.dataFileHandle#Null:C1517)
+		
+	End if 
+	
+	return $that
+	
 Function open($dataFile : 4D:C1709.File) : cs:C1710.DataInfo
 	
 	If (This:C1470.isDataFile($dataFile))
@@ -141,12 +154,9 @@ Function readFileInfo() : cs:C1710.DataInfo
 		
 	Else 
 		This:C1470.isDataLittleEndian:=This:C1470.isSignatureLittleEndian($blDataBlock)
-		var $swap : Integer
-		If (Bool:C1537(This:C1470.isDataLittleEndian))
-			$swap:=PC byte ordering:K22:3
-		Else 
-			$swap:=Macintosh byte ordering:K22:2
-		End if 
+		
+		var $byteOrdering : Integer
+		$byteOrdering:=This:C1470.getByteOrdering()
 		
 		$offset:=0
 		$data_PlatformID:=BLOB to longint:C551($blDataBlock; Macintosh byte ordering:K22:2; $offset)
@@ -164,22 +174,22 @@ Function readFileInfo() : cs:C1710.DataInfo
 		End case 
 		
 		If (This:C1470.dataFileVersion="11")
-			This:C1470.lastOperation:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			This:C1470.lastOperation:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			Case of 
 				: (This:C1470.lastOperation=0)
-					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache has been correctly flushed")
+					This:C1470.lastOperationDescription:=Localized string:C991("The Cache has been correctly flushed")
 				: (This:C1470.lastOperation=-1)
-					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache flushing has been interrupted!")
+					This:C1470.lastOperationDescription:=Localized string:C991("The Cache flushing has been interrupted!")
 				Else 
-					This:C1470.lastOperationDescription:=Get localized string:C991("Unknown Last Operation!")
+					This:C1470.lastOperationDescription:=Localized string:C991("Unknown Last Operation!")
 			End case 
 			
 			$vdt_LastParam:=This:C1470.chunkToHex($blDataBlock; ->$offset; 4; False:C215)
-			$vdt_NbDataSeg:=BLOB to integer:C549($blDataBlock; $swap; $offset)
+			$vdt_NbDataSeg:=BLOB to integer:C549($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfDataSegments:=$vdt_NbDataSeg
-			$vdt_IDisNotAnID:=BLOB to integer:C549($blDataBlock; $swap; $offset)
-			$vdt_SubVersionNb:=BLOB to longint:C551($blDataBlock; $swap; $offset)
-			$vdt_VersionNb:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_IDisNotAnID:=BLOB to integer:C549($blDataBlock; $byteOrdering; $offset)
+			$vdt_SubVersionNb:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
+			$vdt_VersionNb:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.productVersionCode:=String:C10($vdt_VersionNb)+"."+String:C10($vdt_SubVersionNb)
 			$vdt_VUUIDSynchro:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)
 			This:C1470.synchronizationIdentifier:=$vdt_VUUIDSynchro
@@ -195,10 +205,10 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.primaryBlockAllocationAddressTable:=$vdt_AddBATPagePrim
 			This:C1470.hasSecondaryBlockAllocationAddressTable:=($vdt_AddBATPagePrim_R#0)
 			
-			$vdt_BlockSize:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_BlockSize:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.blockSize:=$vdt_BlockSize
 			
-			$vdt_Ratio:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_Ratio:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.ratio:=$vdt_Ratio
 			
 			$vdt_AddTabAddTab4DTab:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
@@ -207,26 +217,26 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vdt_AddSegmentHeaders:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			This:C1470.segmentHeaderAddress:=$vdt_AddSegmentHeaders
 			
-			$vdt_SegHdrSize:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_SegHdrSize:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.segmentHeaderSize:=$vdt_SegHdrSize
 			
 			$vdt_Filfil:=This:C1470.chunkToHex($blDataBlock; ->$offset; 4; False:C215)
 			This:C1470.randomValueToLinkWithIndexes:=$vdt_Filfil
 			
-			$vdt_NbHdrModifs:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbHdrModifs:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfHeaderModifications:=$vdt_NbHdrModifs
 			
 			$vdt_LogLastAction:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			$vReal:=This:C1470.toReal($vdt_LogLastAction; False:C215)
-			This:C1470.lastLogAction:=$vdt_LogLastAction
+			This:C1470.lastLogAction:=$vReal
 			
-			$vdt_NbLogFiles:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbLogFiles:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfLogFiles:=$vdt_NbLogFiles
 			
 			$vdt_LastFlushRandomStamp:=This:C1470.chunkToHex($blDataBlock; ->$offset; 4; True:C214)
 			This:C1470.randomValueForDuplicateIndexDetection:=$vdt_LastFlushRandomStamp
 			
-			$vdt_Nb4DFiles:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_Nb4DFiles:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.addressTablesOfDataTablesSize:=$vdt_Nb4DFiles
 			
 			var $blob : Blob
@@ -241,23 +251,23 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.dataFileNeedsRepair:=($vdt_Flags1=1)
 			
 			If (This:C1470.dataFileNeedsRepair)
-				This:C1470.dataFileInformation.push(Get localized string:C991("Data File needs to be repaired."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Data File needs to be repaired."))
 			Else 
-				This:C1470.dataFileInformation.push(Get localized string:C991("Data File does not need to be repaired."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Data File does not need to be repaired."))
 			End if 
 			
 			This:C1470.dataFileContainsStructure:=($vdt_Flags3=1)
 			If (This:C1470.dataFileContainsStructure)
-				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Structure."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Structure."))
 			Else 
-				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Data."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Data."))
 			End if 
 			
 			This:C1470.indexStoredInSeparateSegment:=($vdt_Flags4=1)
 			If (This:C1470.indexStoredInSeparateSegment)
-				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in a separate segment."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in a separate segment."))
 			Else 
-				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in the same segment."))
+				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in the same segment."))
 			End if 
 			
 			$vdt_Addr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
@@ -268,10 +278,10 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vdt_AddrTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			This:C1470.dataTableHeadersAddress:=$vdt_AddrTabAddr
 			
-			$vdt_NbOf4DTables:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbOf4DTables:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfDataTables:=$vdt_NbOf4DTables
 			
-			$vdt_NbOfRelations:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbOfRelations:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfRelations:=$vdt_NbOfRelations
 			$vdt_RelAddr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			$vReal:=This:C1470.toReal($vdt_RelAddr1stTrou; False:C215)
@@ -280,7 +290,7 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vdt_RelAddrTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			This:C1470.relationsTableAddress:=$vdt_RelAddrTabAddr
 			
-			$vdt_NbOfSeqNb:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbOfSeqNb:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfSequenceNumbers:=$vdt_NbOfSeqNb
 			$vdt_SeqAddr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			$vReal:=This:C1470.toReal($vdt_SeqAddr1stTrou; False:C215)
@@ -289,7 +299,7 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vdt_SeqAddrTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			This:C1470.sequenceNumbersAddress:=$vdt_SeqAddrTabAddr
 			
-			$vdt_NbOfIndex:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbOfIndex:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfIndexes:=$vdt_NbOfIndex
 			$vdt_IdxAddr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			$vReal:=This:C1470.toReal($vdt_IdxAddr1stTrou; False:C215)
@@ -298,7 +308,7 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vdt_IdxAddrTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			This:C1470.indexDefinitionsTableAddress:=$vdt_IdxAddrTabAddr
 			
-			$vdt_NbOfIndexStruct:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_NbOfIndexStruct:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfIndexesDefinedInStructure:=$vdt_NbOfIndex
 			$vdt_IdxAddr1stTrouStr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
 			$vReal:=This:C1470.toReal($vdt_IdxAddr1stTrouStr; False:C215)
@@ -311,7 +321,7 @@ Function readFileInfo() : cs:C1710.DataInfo
 			$vReal:=This:C1470.toReal($vdt_ExtraAddrTabAddr; False:C215)
 			This:C1470.extraPropertiesTableHasHoles:=($vReal#-2000000000)
 			This:C1470.extraPropertiesTableAddress:=$vdt_ExtraAddrTabAddr
-			$vdt_ExtraLen:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_ExtraLen:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.extraPropertiesSize:=$vdt_ExtraLen
 			
 			$vdt_DataAddr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
@@ -319,9 +329,9 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.addressTablesTableHasHoles:=($vReal#-2000000000)
 			This:C1470.firstHolePositionInAddressTablesTable:=$vdt_DataAddr1stTrou
 			
-			$vdt_CountFlush:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_CountFlush:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.numberOfDataFlushes:=$vdt_CountFlush
-			$vdt_Dialect:=BLOB to longint:C551($blDataBlock; $swap; $offset)
+			$vdt_Dialect:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			This:C1470.dialectCode:=$vdt_Dialect
 			Case of 
 				: ($vdt_Dialect=-4444)
@@ -365,13 +375,6 @@ Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 	
 	$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 	
-	var $swap : Integer
-	If ($byteSwap)
-		$swap:=PC byte ordering:K22:3
-	Else 
-		$swap:=Macintosh byte ordering:K22:2
-	End if 
-	
 	$level:=0
 	
 	$type:=This:C1470.blockType[$tag]
@@ -380,6 +383,9 @@ Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 	$nbBlocks:=96+1  //   96 * 128 = 1024 * 12 (8 bytes address + 4 bytes length) 
 	
 	$blDataBlock:=This:C1470.readblocks($tableAddress; $nbBlocks; True:C214)
+	
+	var $byteOrdering : Integer
+	$byteOrdering:=This:C1470.getByteOrdering()
 	
 	$offset:=0
 	$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)
@@ -403,7 +409,7 @@ Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 				If ($curBlock=0)
 					
 				Else 
-					$tableAddresses.push({number: $vTableIdx; address: $curBlock; length: BLOB to longint:C551($blDataBlock; $swap; $offset)})
+					$tableAddresses.push({number: $vTableIdx; address: $curBlock; length: BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)})
 				End if 
 			End if 
 		End for 
@@ -413,10 +419,150 @@ Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 	
 	return This:C1470
 	
+Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object) : Object
 	
+	$didUpdateForm:=False:C215
 	
+	If ($tableAddress>0)
+		
+		$segEOF:=This:C1470.toReal(This:C1470.logicalEOF; True:C214)
+		$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
+		$blockSize:=This:C1470.blockSize
+		
+		$level:=0
+		$type:=This:C1470.blockType.Taba
+		$nbBlocks:=96+1
+		
+		$blDataBlock:=This:C1470.readblocks($tableAddress; $nbBlocks; $byteSwap)
+		
+		var $byteOrdering : Integer
+		$byteOrdering:=This:C1470.getByteOrdering()
+		
+		$offset:=0
+		$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)
+		
+		If ($headerInfo.success)
+			$offset:=$headerInfo.offset
+			$resType:=$headerInfo.resType
+			$blockLength:=$headerInfo.size
+			$resTypeLong:=$headerInfo.resTypeLong
+			$nbTargets:=1024
+			ARRAY REAL:C219($arAddresses; $nbTargets)
+			ARRAY REAL:C219($arLengths; $nbTargets)
+			$vTableIdx:=0
+			For ($i; 1; $nbTargets)
+				$hexAddress:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
+				If ($hexAddress#"0000000000000000")
+					$vTableIdx:=$vTableIdx+1
+					$curAddress:=This:C1470.toReal($hexAddress)
+					$curBlock:=$curAddress\$blockSize
+					If ($curBlock=0)
+						
+					Else 
+						$arAddresses{$vTableIdx}:=$curBlock
+						$arLengths{$vTableIdx}:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
+					End if 
+				End if 
+			End for 
+			ARRAY REAL:C219($arAddresses; $vTableIdx)
+			ARRAY REAL:C219($arLengths; $vTableIdx)
+			For ($i; 1; $vTableIdx)
+				If (($arAddresses{$i}=-1) | ($arLengths{$i}=-1))
+					
+				Else 
+					$blDataBlock:=This:C1470.readblocks($arAddresses{$i}; 1; $byteSwap)  //Read only 1 block, it's enough
+					$offset:=0
+					$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)
+					If ($headerInfo.success)
+						$offset:=$headerInfo.offset
+						$resType:=$headerInfo.resType
+						$blockLength:=$headerInfo.size
+						$resTypeLong:=$headerInfo.resTypeLong
+						Case of 
+							: (($resType="TabA") | ($resType="Taba"))  //If more than 1024 tables
+								$tableStats:=This:C1470.getTableStats($arAddresses{$i}; $tableStats; $ctx)  // Get the TDEF addresses
+							: ($resType="rec1")
+								$tableStats.sizeOf_rec1:=$tableStats.sizeOf_rec1+$blockLength
+								$tableStats.countOf_rec1:=$tableStats.countOf_rec1+1
+								Case of 
+									: ($tableStats.maxOf_rec1=Null:C1517)
+										$tableStats.maxOf_rec1:=$blockLength
+									: ($blockLength>$tableStats.maxOf_rec1)
+										$tableStats.maxOf_rec1:=$blockLength
+								End case 
+								Case of 
+									: ($tableStats.minOf_rec1=Null:C1517)
+										$tableStats.minOf_rec1:=$blockLength
+									: ($blockLength<$tableStats.minOf_rec1)
+										$tableStats.minOf_rec1:=$blockLength
+								End case 
+								$tableStats.avgOf_rec1:=$tableStats.sizeOf_rec1\$tableStats.countOf_rec1
+							: ($resType="blob")
+								$tableStats.sizeOf_blob:=$tableStats.sizeOf_blob+$blockLength
+								$tableStats.countOf_blob:=$tableStats.countOf_blob+1
+								Case of 
+									: ($tableStats.maxOf_blob=Null:C1517)
+										$tableStats.maxOf_blob:=$blockLength
+									: ($blockLength>$tableStats.maxOf_blob)
+										$tableStats.maxOf_blob:=$blockLength
+								End case 
+								Case of 
+									: ($tableStats.minOf_blob=Null:C1517)
+										$tableStats.minOf_blob:=$blockLength
+									: ($blockLength<$tableStats.minOf_blob)
+										$tableStats.minOf_blob:=$blockLength
+								End case 
+								$tableStats.avgOf_blob:=$tableStats.sizeOf_blob\$tableStats.countOf_blob
+							: ($resType="blbT")
+								$tableStats.sizeOf_blbT:=$tableStats.sizeOf_blbT+$blockLength
+								$tableStats.sizeOf_blob:=$tableStats.sizeOf_blob+$blockLength
+								$tableStats.countOf_blbT:=$tableStats.countOf_blbT+1
+								$tableStats.countOf_blob:=$tableStats.countOf_blob+1
+								Case of 
+									: ($tableStats.maxOf_blob=Null:C1517)
+										$tableStats.maxOf_blob:=$blockLength
+									: ($blockLength>$tableStats.maxOf_blob)
+										$tableStats.maxOf_blob:=$blockLength
+								End case 
+								Case of 
+									: ($tableStats.minOf_blob=Null:C1517)
+										$tableStats.minOf_blob:=$blockLength
+									: ($blockLength<$tableStats.minOf_blob)
+										$tableStats.minOf_blob:=$blockLength
+								End case 
+								$tableStats.avgOf_blob:=$tableStats.sizeOf_blob\$tableStats.countOf_blob
+							: ($resType="blbP")
+								$tableStats.sizeOf_blbP:=$tableStats.sizeOf_blbP+$blockLength
+								$tableStats.sizeOf_blob:=$tableStats.sizeOf_blob+$blockLength
+								$tableStats.countOf_blbP:=$tableStats.countOf_blbP+1
+								$tableStats.countOf_blob:=$tableStats.countOf_blob+1
+								Case of 
+									: ($tableStats.maxOf_blob=Null:C1517)
+										$tableStats.maxOf_blob:=$blockLength
+									: ($blockLength>$tableStats.maxOf_blob)
+										$tableStats.maxOf_blob:=$blockLength
+								End case 
+								Case of 
+									: ($tableStats.minOf_blob=Null:C1517)
+										$tableStats.minOf_blob:=$blockLength
+									: ($blockLength<$tableStats.minOf_blob)
+										$tableStats.minOf_blob:=$blockLength
+								End case 
+								$tableStats.avgOf_blob:=$tableStats.sizeOf_blob\$tableStats.countOf_blob
+						End case 
+					End if 
+				End if 
+				$didUpdateForm:=True:C214
+				CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+			End for 
+		End if 
+	End if 
 	
+	If (Not:C34($didUpdateForm))
+		CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+	End if 
 	
+	return $tableStats
 	
 Function readTableInfo($tableAddress : Object) : Object
 	
@@ -425,6 +571,9 @@ Function readTableInfo($tableAddress : Object) : Object
 	$blockSize:=This:C1470.blockSize
 	
 	$blDataBlock:=This:C1470.readblocks($tableAddress.address; $tableAddress.length; False:C215)
+	
+	var $byteOrdering : Integer
+	$byteOrdering:=This:C1470.getByteOrdering()
 	
 	$offset:=0
 	$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)
@@ -443,7 +592,7 @@ Function readTableInfo($tableAddress : Object) : Object
 				
 			: ($resType="DTab")
 				
-				$nb_Records:=BLOB to longint:C551($blDataBlock; $swap; $offset)  //sLONG nbfic;  // nb records
+				$nb_Records:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)  //sLONG nbfic;  // nb records
 				$offset:=$offset+4+8  //Infos not used here
 				$addrTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)  //DataAddr4D addrtabaddr;->Addr of Taba or TabA of records rec1
 				$addressOfTabaOf_rec1:=This:C1470.toReal($addrTabAddr; False:C215)
@@ -452,7 +601,7 @@ Function readTableInfo($tableAddress : Object) : Object
 				$addrBlobTabAddr:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)  //DataAddr4D addrBlobtabaddr;->Addr of Taba or TabA of Blobs
 				$addressOfTabaOf_Blob:=This:C1470.toReal($addrBlobTabAddr; False:C215)
 				
-				$nb_Blobs:=BLOB to longint:C551($blDataBlock; $swap; $offset)  //  //sLONG nbBlob;
+				$nb_Blobs:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)  //  //sLONG nbBlob;
 				
 				$offset:=$offset+16  //Infos not used here
 				$vUUID_TableDef:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer TableDefID;  // ID TDEF 
@@ -482,6 +631,14 @@ Function readTableInfo($tableAddress : Object) : Object
 		
 	End if 
 	
+Function getByteOrdering() : Integer
+	
+	If (Bool:C1537(This:C1470.isDataLittleEndian))
+		return PC byte ordering:K22:3
+	Else 
+		return Macintosh byte ordering:K22:2
+	End if 
+	
 Function readTableDefinition($tableAddress : Object) : Object
 	
 	$segEOF:=This:C1470.toReal(This:C1470.logicalEOF; True:C214)
@@ -489,6 +646,9 @@ Function readTableDefinition($tableAddress : Object) : Object
 	$blockSize:=This:C1470.blockSize
 	
 	$blDataBlock:=This:C1470.readblocks($tableAddress.address; $tableAddress.length; False:C215)
+	
+	var $byteOrdering : Integer
+	$byteOrdering:=This:C1470.getByteOrdering()
 	
 	$offset:=0
 	$headerInfo:=This:C1470.getBlockHeader($blDataBlock; $byteSwap)

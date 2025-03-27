@@ -1,18 +1,72 @@
+property countCores : Integer
+property useMultipleCores : Boolean
+
 Class constructor
+	
+	This:C1470.countCores:=System info:C1571.cores
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is compiled mode)
+	If (This:C1470.useMultipleCores)
+		This:C1470.countCores-=2
+	End if 
+	
+Function _dropItemToFile() : 4D:C1709.File
+	
+	var $path : Text
+	$path:=Get file from pasteboard:C976(1)
+	
+	If (Test path name:C476($path)#Is a document:K24:1)
+		return 
+	End if 
+	
+	var $file : 4D:C1709.File
+	$file:=File:C1566($path; fk platform path:K87:2)
+	
+	If ($file.isAlias)
+		$file:=$file.original
+	End if 
+	
+	If ([".4DD"; ".data"].indexOf($file.extension)=-1)
+		return 
+	End if 
+	
+	return $file
+	
+Function onDragOver() : Integer
+	
+	var $file : 4D:C1709.File
+	$file:=This:C1470._dropItemToFile()
+	
+	If ($file#Null:C1517)
+		return 0
+	Else 
+		return -1
+	End if 
+	
+Function onDrop()
+	
+	var $file : 4D:C1709.File
+	$file:=This:C1470._dropItemToFile()
+	
+	If ($file#Null:C1517)
+		This:C1470.open($file)
+	End if 
 	
 Function open($dataFile : 4D:C1709.File)
 	
 	$ctx:={file: $dataFile; window: Current form window:C827}
 	$ctx.onFileInfo:=This:C1470._onFileInfo
 	$ctx.onTableInfo:=This:C1470._onTableInfo
+	$ctx.onTableStats:=This:C1470._onTableStats
 	$ctx.onFinish:=This:C1470._onFinish
-	$ctx.objectName:=OBJECT Get name:C1087(Object current:K67:2)
+	$ctx.objectName:="open"
+	$ctx.countCores:=This:C1470.countCores
+	$ctx.useMultipleCores:=This:C1470.useMultipleCores
 	
 	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
 	
-	CALL WORKER:C1389(Current method name:C684; Formula:C1597(preemptiveWorker); $ctx)
-	
-	CALL WORKER:C1389(Current method name:C684; This:C1470._open; $ctx)
+	$workerName:="DataAnalyzer"
+	CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
+	CALL WORKER:C1389($workerName; This:C1470._open; $ctx)
 	
 Function _open($ctx : Object)
 	
@@ -106,7 +160,70 @@ Function _open($ctx : Object)
 		End if 
 	End for each 
 	
+	var $workerNames : Collection
+	If ($ctx.useMultipleCores)
+		$workerNames:=[]
+		For ($i; 1; $ctx.countCores)
+			$workerName:=["DataAnalyzer"; " "; "("; $i; ")"].join("")
+			$workerNames.push($workerName)
+			CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
+		End for 
+	End if 
+	
+	var $dataInfo2 : cs:C1710.DataInfo
+	$dataInfo2:=$dataInfo.clone()
+	
+	For each ($tableInfo; $dataInfo.tableInfo)
+		
+		$tableStats:={\
+			tableUUID: $tableInfo.tableUUID; \
+			sizeOf_rec1: 0; \
+			countOf_rec1: 0; \
+			sizeOf_blob: 0; \
+			countOf_blob: 0; \
+			sizeOf_blbT: 0; \
+			countOf_blbT: 0; \
+			sizeOf_blbP: 0; \
+			countOf_blbP: 0; \
+			maxOf_rec1: Null:C1517; \
+			minOf_rec1: Null:C1517; \
+			avgOf_rec1: Null:C1517; \
+			maxOf_blob: Null:C1517; \
+			minOf_blob: Null:C1517; \
+			avgOf_blob: Null:C1517}
+		
+		If ($ctx.useMultipleCores)
+			$workerName:=$workerNames[$tableInfo.tableNumber%$ctx.countCores]
+			CALL WORKER:C1389($workerName; Formula:C1597(_run); $dataInfo; $tableInfo; $tableStats; $ctx)
+		Else 
+			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
+			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
+		End if 
+		
+	End for each 
+	
 	CALL FORM:C1391($ctx.window; $ctx.onFinish; $ctx)
+	
+Function _onTableStats($tableStats : Object)
+	
+	var $table : Object
+	
+	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
+	If ($table=Null:C1517)
+		
+	Else 
+		$table.sizeOf_rec1:=$tableStats.sizeOf_rec1
+		$table.countOf_rec1:=$tableStats.countOf_rec1
+		$table.maxOf_rec1:=$tableStats.maxOf_rec1
+		$table.minOf_rec1:=$tableStats.minOf_rec1
+		$table.sizeOf_blob:=$tableStats.sizeOf_blob
+		$table.countOf_blob:=$tableStats.countOf_blob
+		$table.maxOf_blob:=$tableStats.maxOf_blob
+		$table.minOf_blob:=$tableStats.minOf_blob
+		$table.avgOf_rec1:=$tableStats.avgOf_rec1
+		$table.avgOf_blob:=$tableStats.avgOf_blob
+		Form:C1466.tableInfo.col:=Form:C1466.tableInfo.col
+	End if 
 	
 Function _onFileInfo($fileInfo : Object)
 	

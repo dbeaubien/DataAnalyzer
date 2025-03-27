@@ -25,7 +25,7 @@
 					"text": "Tab control",
 					"top": 10,
 					"left": 20,
-					"width": 1093,
+					"width": 1143,
 					"height": 560,
 					"sizingX": "grow",
 					"sizingY": "grow",
@@ -35,19 +35,6 @@
 					],
 					"action": "gotoPage",
 					"bottom": 570
-				},
-				"open": {
-					"type": "button",
-					"text": "Button",
-					"top": 35,
-					"left": 39,
-					"width": 123,
-					"height": 34,
-					"events": [
-						"onClick"
-					],
-					"method": "ObjectMethods/open.4dm",
-					"focusable": false
 				}
 			}
 		},
@@ -56,10 +43,13 @@
 				"tableInfo": {
 					"type": "listbox",
 					"left": 30,
-					"top": 80,
-					"width": 1070,
-					"height": 480,
-					"events": [],
+					"top": 60,
+					"width": 1120,
+					"height": 500,
+					"events": [
+						"onDrop",
+						"onDragOver"
+					],
 					"listboxType": "collection",
 					"dataSource": "Form:C1466.tableInfo.col",
 					"currentItemSource": "Form:C1466.tableInfo.item",
@@ -67,10 +57,13 @@
 					"selectedItemsSource": "Form:C1466.tableInfo.sel",
 					"horizontalLineStroke": "transparent",
 					"class": "data",
-					"staticColumnCount": 10,
+					"staticColumnCount": 15,
 					"resizingMode": "legacy",
 					"sizingX": "grow",
 					"sizingY": "grow",
+					"dropping": "custom",
+					"method": "ObjectMethods/tableInfo.4dm",
+					"selectionMode": "none",
 					"columns": [
 						{
 							"header": {
@@ -116,7 +109,8 @@
 							"enterable": false,
 							"truncateMode": "none",
 							"width": 180,
-							"dataSource": "This:C1470.tableUUID"
+							"dataSource": "This:C1470.tableUUID",
+							"visibility": "hidden"
 						},
 						{
 							"header": {
@@ -132,6 +126,85 @@
 							"truncateMode": "none",
 							"width": 90,
 							"dataSource": "This:C1470.nbRecords",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header6",
+								"text": ":xliff:Record Count"
+							},
+							"name": "Column6",
+							"footer": {
+								"name": "Footer6"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSourceTypeHint": "number",
+							"dataSource": "This:C1470.countOf_rec1"
+						},
+						{
+							"header": {
+								"name": "Header7",
+								"text": ":xliff:Size Records"
+							},
+							"name": "Column7",
+							"footer": {
+								"name": "Footer7"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSourceTypeHint": "number",
+							"dataSource": "This:C1470.sizeOf_rec1"
+						},
+						{
+							"header": {
+								"name": "Header11",
+								"text": ":xliff:Max Record"
+							},
+							"name": "Column11",
+							"footer": {
+								"name": "Footer11"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.maxOf_rec1"
+						},
+						{
+							"header": {
+								"name": "Header12",
+								"text": ":xliff:Min Record"
+							},
+							"name": "Column12",
+							"footer": {
+								"name": "Footer12"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.minOf_rec1",
+							"dataSourceTypeHint": "number"
+						},
+						{
+							"header": {
+								"name": "Header13",
+								"text": ":xliff:Avg Record"
+							},
+							"name": "Column13",
+							"footer": {
+								"name": "Footer13"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.avgOf_rec1",
 							"dataSourceTypeHint": "number"
 						},
 						{
@@ -152,34 +225,6 @@
 						},
 						{
 							"header": {
-								"name": "Header6",
-								"text": ":xliff:Record Count"
-							},
-							"name": "Column6",
-							"footer": {
-								"name": "Footer6"
-							},
-							"resizable": false,
-							"enterable": false,
-							"truncateMode": "none",
-							"width": 90
-						},
-						{
-							"header": {
-								"name": "Header7",
-								"text": ":xliff:Size Records"
-							},
-							"name": "Column7",
-							"footer": {
-								"name": "Footer7"
-							},
-							"resizable": false,
-							"enterable": false,
-							"truncateMode": "none",
-							"width": 90
-						},
-						{
-							"header": {
 								"name": "Header8",
 								"text": ":xliff:Blob Count"
 							},
@@ -191,7 +236,7 @@
 							"enterable": false,
 							"truncateMode": "none",
 							"width": 90,
-							"dataSource": "",
+							"dataSource": "This:C1470.countOf_blob",
 							"dataSourceTypeHint": "number"
 						},
 						{
@@ -206,12 +251,13 @@
 							"resizable": false,
 							"enterable": false,
 							"truncateMode": "none",
-							"width": 90
+							"width": 90,
+							"dataSource": "This:C1470.sizeOf_blob"
 						},
 						{
 							"header": {
 								"name": "Header10",
-								"text": ":xliff:Max Record"
+								"text": ":xliff:Max Blob"
 							},
 							"name": "Column10",
 							"footer": {
@@ -220,9 +266,53 @@
 							"resizable": false,
 							"enterable": false,
 							"truncateMode": "none",
-							"width": 90
+							"width": 90,
+							"dataSource": "This:C1470.maxOf_blob"
+						},
+						{
+							"header": {
+								"name": "Header15",
+								"text": ":xliff:Min Blob"
+							},
+							"name": "Column15",
+							"footer": {
+								"name": "Footer15"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.minOf_blob"
+						},
+						{
+							"header": {
+								"name": "Header14",
+								"text": ":xliff:Avg Blob"
+							},
+							"name": "Column14",
+							"footer": {
+								"name": "Footer14"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 90,
+							"dataSource": "This:C1470.avgOf_blob"
 						}
 					]
+				},
+				"open": {
+					"type": "button",
+					"text": ":xliff:Select Data File…",
+					"top": 30,
+					"left": 30,
+					"width": 216,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/open.4dm",
+					"focusable": false
 				}
 			}
 		},
@@ -230,21 +320,24 @@
 			"objects": {
 				"dataFileVersion": {
 					"type": "input",
-					"left": 32,
-					"top": 24,
+					"left": 750,
+					"top": 80,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
 					"dragging": "none",
 					"dropping": "none",
 					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.dataFileVersion"
+					"dataSource": "Form:C1466.fileInfo.dataFileVersion",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"isDataLittleEndian": {
 					"type": "checkbox",
 					"text": ":xliff:isDataLittleEndian",
-					"top": 42,
-					"left": 445,
+					"top": 80,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -254,47 +347,40 @@
 				},
 				"lastOperation": {
 					"type": "input",
-					"left": 32,
-					"top": 44,
-					"width": 175,
+					"left": 750,
+					"top": 160,
+					"width": 35,
 					"height": 17,
 					"contextMenu": "none",
 					"dragging": "none",
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.lastOperation",
-					"dataSourceTypeHint": "integer"
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"lastOperationDescription": {
 					"type": "input",
-					"left": 32,
-					"top": 64,
-					"width": 375,
+					"left": 830,
+					"top": 160,
+					"width": 315,
 					"height": 17,
 					"contextMenu": "none",
 					"dragging": "none",
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.lastOperationDescription",
-					"dataSourceTypeHint": "text"
-				},
-				"numberOfDataSegments": {
-					"type": "input",
-					"left": 32,
-					"top": 84,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfDataSegments",
-					"dataSourceTypeHint": "integer"
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"productVersionCode": {
 					"type": "input",
-					"left": 32,
-					"top": 104,
+					"left": 750,
+					"top": 100,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -302,64 +388,15 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.productVersionCode",
-					"dataSourceTypeHint": "integer"
-				},
-				"synchronizationIdentifier": {
-					"type": "input",
-					"left": 32,
-					"top": 124,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.synchronizationIdentifier",
-					"dataSourceTypeHint": "text"
-				},
-				"logicalEOF": {
-					"type": "input",
-					"left": 32,
-					"top": 144,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.logicalEOF",
-					"dataSourceTypeHint": "text"
-				},
-				"limitSegments": {
-					"type": "input",
-					"left": 32,
-					"top": 164,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.limitSegments",
-					"dataSourceTypeHint": "text"
-				},
-				"primaryBlockAllocationAddressTable": {
-					"type": "input",
-					"left": 32,
-					"top": 184,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.primaryBlockAllocationAddressTable",
-					"dataSourceTypeHint": "text"
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"blockSize": {
 					"type": "input",
-					"left": 32,
-					"top": 204,
+					"left": 750,
+					"top": 120,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -367,13 +404,16 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.blockSize",
-					"dataSourceTypeHint": "integer"
+					"dataSourceTypeHint": "integer",
+					"textAlign": "left",
+					"fill": "transparent",
+					"borderStyle": "none"
 				},
 				"hasSecondaryBlockAllocationAddressTable": {
 					"type": "checkbox",
 					"text": ":xliff:hasSecondaryBlockAllocationAddressTable",
-					"top": 62,
-					"left": 445,
+					"top": 100,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -381,88 +421,10 @@
 					"dataSource": "Form:C1466.fileInfo.hasSecondaryBlockAllocationAddressTable",
 					"enterable": false
 				},
-				"ratio": {
-					"type": "input",
-					"left": 32,
-					"top": 224,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.ratio",
-					"dataSourceTypeHint": "integer"
-				},
-				"ratio1": {
-					"type": "input",
-					"left": 32,
-					"top": 244,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.ratio",
-					"dataSourceTypeHint": "integer"
-				},
-				"addressTablesOfDataTablesAddress": {
-					"type": "input",
-					"left": 32,
-					"top": 264,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.addressTablesOfDataTablesAddress",
-					"dataSourceTypeHint": "integer"
-				},
-				"segmentHeaderAddress": {
-					"type": "input",
-					"left": 32,
-					"top": 284,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.segmentHeaderAddress",
-					"dataSourceTypeHint": "integer"
-				},
-				"segmentHeaderSize": {
-					"type": "input",
-					"left": 32,
-					"top": 304,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.segmentHeaderSize",
-					"dataSourceTypeHint": "integer"
-				},
-				"RandomValueToLinkWithIndexes": {
-					"type": "input",
-					"left": 32,
-					"top": 324,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.RandomValueToLinkWithIndexes",
-					"dataSourceTypeHint": "text"
-				},
 				"numberOfHeaderModifications": {
 					"type": "input",
-					"left": 32,
-					"top": 344,
+					"left": 750,
+					"top": 380,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -470,12 +432,15 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.numberOfHeaderModifications",
-					"dataSourceTypeHint": "text"
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"lastLogAction": {
 					"type": "input",
-					"left": 32,
-					"top": 364,
+					"left": 750,
+					"top": 180,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -483,12 +448,15 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.lastLogAction",
-					"dataSourceTypeHint": "text"
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"numberOfLogFiles": {
 					"type": "input",
-					"left": 32,
-					"top": 384,
+					"left": 750,
+					"top": 400,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -496,25 +464,15 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.numberOfLogFiles",
-					"dataSourceTypeHint": "integer"
-				},
-				"randomValueForDuplicateIndexDetection": {
-					"type": "input",
-					"left": 32,
-					"top": 404,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.randomValueForDuplicateIndexDetection",
-					"dataSourceTypeHint": "text"
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
 				},
 				"addressTablesOfDataTablesSize": {
 					"type": "input",
-					"left": 32,
-					"top": 424,
+					"left": 750,
+					"top": 240,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -522,13 +480,16 @@
 					"dropping": "none",
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.addressTablesOfDataTablesSize",
-					"dataSourceTypeHint": "integer"
+					"dataSourceTypeHint": "integer",
+					"textAlign": "left",
+					"fill": "transparent",
+					"borderStyle": "none"
 				},
 				"dataFileNeedsRepair": {
 					"type": "checkbox",
 					"text": ":xliff:dataFileNeedsRepair",
-					"top": 82,
-					"left": 445,
+					"top": 120,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -539,8 +500,8 @@
 				"dataFileContainsStructure": {
 					"type": "checkbox",
 					"text": ":xliff:dataFileContainsStructure",
-					"top": 102,
-					"left": 445,
+					"top": 140,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -551,8 +512,8 @@
 				"indexStoredInSeparateSegment": {
 					"type": "checkbox",
 					"text": ":xliff:indexStoredInSeparateSegment",
-					"top": 122,
-					"left": 445,
+					"top": 160,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -563,8 +524,8 @@
 				"addressTableHasHoles": {
 					"type": "checkbox",
 					"text": ":xliff:addressTableHasHoles",
-					"top": 142,
-					"left": 445,
+					"top": 180,
+					"left": 35,
 					"width": 322,
 					"height": 26,
 					"events": [],
@@ -572,10 +533,441 @@
 					"dataSource": "Form:C1466.fileInfo.addressTableHasHoles",
 					"enterable": false
 				},
+				"numberOfDataTables": {
+					"type": "input",
+					"left": 750,
+					"top": 220,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataTables",
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"numberOfRelations": {
+					"type": "input",
+					"left": 750,
+					"top": 280,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfRelations",
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"relationsTableHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:relationsTableHasHoles",
+					"top": 200,
+					"left": 35,
+					"width": 322,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.relationsTableHasHoles",
+					"enterable": false
+				},
+				"numberOfSequenceNumbers": {
+					"type": "input",
+					"left": 750,
+					"top": 300,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfSequenceNumbers",
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"sequenceNumbersTableHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:sequenceNumbersTableHasHoles",
+					"top": 220,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.sequenceNumbersTableHasHoles",
+					"enterable": false
+				},
+				"numberOfIndexes": {
+					"type": "input",
+					"left": 750,
+					"top": 320,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfIndexes",
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"indexDefinitionsTableHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:indexDefinitionsTableHasHoles",
+					"top": 240,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableHasHoles",
+					"enterable": false
+				},
+				"numberOfIndexesDefinedInStructure": {
+					"type": "input",
+					"left": 750,
+					"top": 340,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfIndexesDefinedInStructure",
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"indexDefinitionsTableInStructureHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:indexDefinitionsTableInStructureHasHoles",
+					"top": 260,
+					"left": 35,
+					"width": 362,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableInStructureHasHoles",
+					"enterable": false
+				},
+				"extraPropertiesTableHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:extraPropertiesTableHasHoles",
+					"top": 280,
+					"left": 35,
+					"width": 282,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.extraPropertiesTableHasHoles",
+					"enterable": false
+				},
+				"addressTablesTableHasHoles": {
+					"type": "checkbox",
+					"text": ":xliff:addressTablesTableHasHoles",
+					"top": 300,
+					"left": 35,
+					"width": 402,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.addressTablesTableHasHoles",
+					"enterable": false
+				},
+				"numberOfDataFlushes": {
+					"type": "input",
+					"left": 750,
+					"top": 360,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataFlushes",
+					"dataSourceTypeHint": "text",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"dialectCode": {
+					"type": "input",
+					"left": 750,
+					"top": 440,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.dialectCode",
+					"dataSourceTypeHint": "integer",
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "left"
+				},
+				"withICU": {
+					"type": "checkbox",
+					"text": ":xliff:withICU",
+					"top": 320,
+					"left": 35,
+					"width": 382,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.withICU",
+					"enterable": false
+				},
+				"ignoreWildCharInMiddle": {
+					"type": "checkbox",
+					"text": ":xliff:ignoreWildCharInMiddle",
+					"top": 340,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.ignoreWildCharInMiddle",
+					"enterable": false
+				},
+				"useSecondaryCollationStrengthForMatching": {
+					"type": "checkbox",
+					"text": ":xliff:useSecondaryCollationStrengthForMatching",
+					"top": 360,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useSecondaryCollationStrengthForMatching",
+					"enterable": false
+				},
+				"useQuaternaryCollationStrengthForSorting": {
+					"type": "checkbox",
+					"text": ":xliff:useQuaternaryCollationStrengthForSorting",
+					"top": 380,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useQuaternaryCollationStrengthForSorting",
+					"enterable": false
+				},
+				"sortHiraganaCodePointsFirstOnQuaternaryLevel": {
+					"type": "checkbox",
+					"text": ":xliff:sortHiraganaCodePointsFirstOnQuaternaryLevel",
+					"top": 400,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.sortHiraganaCodePointsFirstOnQuaternaryLevel",
+					"enterable": false
+				},
+				"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator": {
+					"type": "checkbox",
+					"text": ":xliff:useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator",
+					"top": 420,
+					"left": 35,
+					"width": 442,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator",
+					"enterable": false
+				},
+				"useTraditionalStyleSorting": {
+					"type": "checkbox",
+					"text": ":xliff:useTraditionalStyleSorting",
+					"top": 440,
+					"left": 35,
+					"width": 342,
+					"height": 26,
+					"events": [],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.fileInfo.useTraditionalStyleSorting",
+					"enterable": false
+				},
+				"Text": {
+					"type": "text",
+					"text": ":xliff:Data File Properties",
+					"top": 50,
+					"left": 39,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold"
+				},
+				"Text1": {
+					"type": "text",
+					"text": ":xliff:Data File Version:",
+					"top": 80,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text2": {
+					"type": "text",
+					"text": ":xliff:Last Operation:",
+					"top": 160,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text3": {
+					"type": "text",
+					"text": ":xliff:Block Size:",
+					"top": 120,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text4": {
+					"type": "text",
+					"text": ":xliff:Product Version:",
+					"top": 100,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text5": {
+					"type": "text",
+					"text": ":xliff:Number Of Tables:",
+					"top": 220,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text6": {
+					"type": "text",
+					"text": ":xliff:Number Of Relations:",
+					"top": 280,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text7": {
+					"type": "text",
+					"text": ":xliff:Number Of Sequence Numbers:",
+					"top": 300,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text8": {
+					"type": "text",
+					"text": ":xliff:Number Of Indexes:",
+					"top": 320,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text9": {
+					"type": "text",
+					"text": ":xliff:Number Of Indexes Defined In Catalog:",
+					"top": 340,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text10": {
+					"type": "text",
+					"text": ":xliff:Number Of Data Flushes:",
+					"top": 360,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text11": {
+					"type": "text",
+					"text": ":xliff:Number Of Header Modifications:",
+					"top": 380,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text12": {
+					"type": "text",
+					"text": ":xliff:Number Of Journal Files:",
+					"top": 400,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text13": {
+					"type": "text",
+					"text": ":xliff:Language Code:",
+					"top": 440,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text14": {
+					"type": "text",
+					"text": ":xliff:Last Operation Number:",
+					"top": 180,
+					"left": 482,
+					"width": 258,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				},
+				"Text15": {
+					"type": "text",
+					"text": ":xliff:Number Of Address Tables:",
+					"top": 240,
+					"left": 522,
+					"width": 218,
+					"height": 16,
+					"fontWeight": "bold",
+					"textAlign": "right"
+				}
+			}
+		},
+		{
+			"objects": {
 				"firstHolePositionInAddressTable": {
 					"type": "input",
-					"left": 252,
-					"top": 104,
+					"left": 952,
+					"top": 124,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -586,8 +978,8 @@
 				},
 				"dataTableHeadersAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 124,
+					"left": 952,
+					"top": 144,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -598,8 +990,8 @@
 				},
 				"dataTableHeadersAddress1": {
 					"type": "input",
-					"left": 252,
-					"top": 144,
+					"left": 952,
+					"top": 164,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -608,36 +1000,10 @@
 					"enterable": false,
 					"dataSource": "Form:C1466.fileInfo.dataTableHeadersAddress"
 				},
-				"numberOfDataTables": {
-					"type": "input",
-					"left": 252,
-					"top": 164,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfDataTables",
-					"dataSourceTypeHint": "integer"
-				},
-				"numberOfRelations": {
-					"type": "input",
-					"left": 252,
-					"top": 184,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfRelations",
-					"dataSourceTypeHint": "integer"
-				},
 				"firstHolePositionInRelationsTable": {
 					"type": "input",
-					"left": 252,
-					"top": 204,
+					"left": 952,
+					"top": 224,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -647,22 +1013,10 @@
 					"dataSource": "Form:C1466.fileInfo.firstHolePositionInRelationsTable",
 					"dataSourceTypeHint": "text"
 				},
-				"relationsTableHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:relationsTableHasHoles",
-					"top": 162,
-					"left": 445,
-					"width": 322,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.relationsTableHasHoles",
-					"enterable": false
-				},
 				"relationsTableAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 224,
+					"left": 952,
+					"top": 244,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -672,35 +1026,10 @@
 					"dataSource": "Form:C1466.fileInfo.relationsTableAddress",
 					"dataSourceTypeHint": "text"
 				},
-				"numberOfSequenceNumbers": {
-					"type": "input",
-					"left": 252,
-					"top": 244,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfSequenceNumbers",
-					"dataSourceTypeHint": "text"
-				},
-				"sequenceNumbersTableHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:sequenceNumbersTableHasHoles",
-					"top": 182,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.sequenceNumbersTableHasHoles",
-					"enterable": false
-				},
 				"firstHolePositionInSequenceNumbersTable": {
 					"type": "input",
-					"left": 252,
-					"top": 264,
+					"left": 952,
+					"top": 284,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -712,8 +1041,8 @@
 				},
 				"sequenceNumbersAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 284,
+					"left": 952,
+					"top": 304,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -723,35 +1052,10 @@
 					"dataSource": "Form:C1466.fileInfo.sequenceNumbersAddress",
 					"dataSourceTypeHint": "text"
 				},
-				"numberOfIndexes": {
-					"type": "input",
-					"left": 252,
-					"top": 304,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfIndexes",
-					"dataSourceTypeHint": "integer"
-				},
-				"indexDefinitionsTableHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:indexDefinitionsTableHasHoles",
-					"top": 202,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableHasHoles",
-					"enterable": false
-				},
 				"firstHolePositionInIndexDefinitionsTable": {
 					"type": "input",
-					"left": 252,
-					"top": 324,
+					"left": 952,
+					"top": 344,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -763,8 +1067,8 @@
 				},
 				"indexDefinitionsTableAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 344,
+					"left": 952,
+					"top": 364,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -774,35 +1078,10 @@
 					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableAddress",
 					"dataSourceTypeHint": "text"
 				},
-				"numberOfIndexesDefinedInStructure": {
-					"type": "input",
-					"left": 252,
-					"top": 364,
-					"width": 175,
-					"height": 17,
-					"contextMenu": "none",
-					"dragging": "none",
-					"dropping": "none",
-					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfIndexesDefinedInStructure",
-					"dataSourceTypeHint": "text"
-				},
-				"indexDefinitionsTableInStructureHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:indexDefinitionsTableInStructureHasHoles",
-					"top": 222,
-					"left": 445,
-					"width": 362,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableInStructureHasHoles",
-					"enterable": false
-				},
 				"firstHolePositionInIndexDefinitionsTableInStructure": {
 					"type": "input",
-					"left": 252,
-					"top": 384,
+					"left": 952,
+					"top": 404,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -814,8 +1093,8 @@
 				},
 				"indexDefinitionsTableInStructureAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 404,
+					"left": 952,
+					"top": 424,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -825,22 +1104,10 @@
 					"dataSource": "Form:C1466.fileInfo.indexDefinitionsTableInStructureAddress",
 					"dataSourceTypeHint": "text"
 				},
-				"extraPropertiesTableHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:extraPropertiesTableHasHoles",
-					"top": 242,
-					"left": 445,
-					"width": 282,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.extraPropertiesTableHasHoles",
-					"enterable": false
-				},
 				"extraPropertiesTableAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 424,
+					"left": 952,
+					"top": 444,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -852,8 +1119,8 @@
 				},
 				"extraPropertiesSize": {
 					"type": "input",
-					"left": 252,
-					"top": 444,
+					"left": 952,
+					"top": 464,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -863,22 +1130,10 @@
 					"dataSource": "Form:C1466.fileInfo.extraPropertiesSize",
 					"dataSourceTypeHint": "text"
 				},
-				"addressTablesTableHasHoles": {
-					"type": "checkbox",
-					"text": ":xliff:addressTablesTableHasHoles",
-					"top": 262,
-					"left": 445,
-					"width": 402,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.addressTablesTableHasHoles",
-					"enterable": false
-				},
 				"firstHolePositionInAddressTablesTable": {
 					"type": "input",
-					"left": 252,
-					"top": 464,
+					"left": 952,
+					"top": 484,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
@@ -888,22 +1143,113 @@
 					"dataSource": "Form:C1466.fileInfo.firstHolePositionInAddressTablesTable",
 					"dataSourceTypeHint": "text"
 				},
-				"numberOfDataFlushes": {
+				"addressTablesOfDataTablesAddress": {
 					"type": "input",
-					"left": 252,
-					"top": 484,
+					"left": 572,
+					"top": 404,
 					"width": 175,
 					"height": 17,
 					"contextMenu": "none",
 					"dragging": "none",
 					"dropping": "none",
 					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.numberOfDataFlushes",
+					"dataSource": "Form:C1466.fileInfo.addressTablesOfDataTablesAddress",
+					"dataSourceTypeHint": "integer"
+				},
+				"ratio": {
+					"type": "input",
+					"left": 572,
+					"top": 364,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.ratio",
+					"dataSourceTypeHint": "integer"
+				},
+				"logicalEOF": {
+					"type": "input",
+					"left": 572,
+					"top": 284,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.logicalEOF",
 					"dataSourceTypeHint": "text"
 				},
-				"dialectCode": {
+				"limitSegments": {
 					"type": "input",
-					"left": 32,
+					"left": 572,
+					"top": 304,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.limitSegments",
+					"dataSourceTypeHint": "text"
+				},
+				"primaryBlockAllocationAddressTable": {
+					"type": "input",
+					"left": 572,
+					"top": 324,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.primaryBlockAllocationAddressTable",
+					"dataSourceTypeHint": "text"
+				},
+				"numberOfDataSegments": {
+					"type": "input",
+					"left": 712,
+					"top": 224,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.numberOfDataSegments",
+					"dataSourceTypeHint": "integer"
+				},
+				"segmentHeaderAddress": {
+					"type": "input",
+					"left": 572,
+					"top": 424,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.segmentHeaderAddress",
+					"dataSourceTypeHint": "integer"
+				},
+				"segmentHeaderSize": {
+					"type": "input",
+					"left": 572,
+					"top": 444,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.segmentHeaderSize",
+					"dataSourceTypeHint": "integer"
+				},
+				"RandomValueToLinkWithIndexes": {
+					"type": "input",
+					"left": 572,
 					"top": 464,
 					"width": 175,
 					"height": 17,
@@ -911,102 +1257,45 @@
 					"dragging": "none",
 					"dropping": "none",
 					"enterable": false,
-					"dataSource": "Form:C1466.fileInfo.dialectCode",
-					"dataSourceTypeHint": "integer"
+					"dataSource": "Form:C1466.fileInfo.RandomValueToLinkWithIndexes",
+					"dataSourceTypeHint": "text"
 				},
-				"withICU": {
-					"type": "checkbox",
-					"text": ":xliff:withICU",
-					"top": 282,
-					"left": 445,
-					"width": 382,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.withICU",
-					"enterable": false
+				"randomValueForDuplicateIndexDetection": {
+					"type": "input",
+					"left": 572,
+					"top": 344,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.randomValueForDuplicateIndexDetection",
+					"dataSourceTypeHint": "text"
 				},
-				"ignoreWildCharInMiddle": {
-					"type": "checkbox",
-					"text": ":xliff:ignoreWildCharInMiddle",
-					"top": 302,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.ignoreWildCharInMiddle",
-					"enterable": false
-				},
-				"useSecondaryCollationStrengthForMatching": {
-					"type": "checkbox",
-					"text": ":xliff:useSecondaryCollationStrengthForMatching",
-					"top": 322,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.useSecondaryCollationStrengthForMatching",
-					"enterable": false
-				},
-				"useQuaternaryCollationStrengthForSorting": {
-					"type": "checkbox",
-					"text": ":xliff:useQuaternaryCollationStrengthForSorting",
-					"top": 342,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.useQuaternaryCollationStrengthForSorting",
-					"enterable": false
-				},
-				"sortHiraganaCodePointsFirstOnQuaternaryLevel": {
-					"type": "checkbox",
-					"text": ":xliff:sortHiraganaCodePointsFirstOnQuaternaryLevel",
-					"top": 362,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.sortHiraganaCodePointsFirstOnQuaternaryLevel",
-					"enterable": false
-				},
-				"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator": {
-					"type": "checkbox",
-					"text": ":xliff:useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator",
-					"top": 382,
-					"left": 445,
-					"width": 442,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator",
-					"enterable": false
-				},
-				"useTraditionalStyleSorting": {
-					"type": "checkbox",
-					"text": ":xliff:useTraditionalStyleSorting",
-					"top": 402,
-					"left": 445,
-					"width": 342,
-					"height": 26,
-					"events": [],
-					"dataSourceTypeHint": "boolean",
-					"dataSource": "Form:C1466.fileInfo.useTraditionalStyleSorting",
-					"enterable": false
+				"synchronizationIdentifier": {
+					"type": "input",
+					"left": 892,
+					"top": 344,
+					"width": 175,
+					"height": 17,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "none",
+					"enterable": false,
+					"dataSource": "Form:C1466.fileInfo.synchronizationIdentifier",
+					"dataSourceTypeHint": "text"
 				}
 			}
 		}
 	],
-	"geometryStamp": 647,
+	"geometryStamp": 1427,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
 		"views": {
 			"View 1": {}
 		}
-	}
+	},
+	"method": "method.4dm"
 }

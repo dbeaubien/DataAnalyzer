@@ -1,4 +1,4 @@
-//%attributes = {}
+//%attributes = {"shared":true}
 #DECLARE($params : Object)
 
 If ($params=Null:C1517)
