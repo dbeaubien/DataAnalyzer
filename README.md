@@ -8,7 +8,7 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * `4D.FileHandle` instead of `Open document`
 * `CALL FORM` instead of `POST OUTSIDE CALL`
 * `CALL WORKER` instead of `New process`
-* run mulitple preemptive process in compiled mode
+* run mulitple preëmptive processes in compiled mode
 * export JSON
 * export XLSX
 
