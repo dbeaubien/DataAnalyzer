@@ -7,7 +7,7 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * resolve data file alias or shortcut
 * use file handle instead of receive packet
 * runs in background preemptive process in compiled mode
-* runs mulitple parallel workers (Mac only)
+* runs mulitple parallel workers in compiled mode
 
 ## TODO 
 
