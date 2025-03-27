@@ -5,9 +5,10 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 ## Modifications
 
 * resolve data file alias or shortcut
-* use file handle instead of receive packet
-* runs in background preemptive process in compiled mode
-* runs mulitple parallel workers in compiled mode
+* `4D.FileHandle` instead of `Open document`
+* `CALL FORM` instead of `POST OUTSIDE CALL`
+* `CALL WORKER` instead of `New process`
+* run mulitple preemptive process in compiled mode
 * export JSON
 * export XLSX
 
