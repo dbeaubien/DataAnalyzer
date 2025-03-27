@@ -8,13 +8,13 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * use file handle instead of receive packet
 * runs in background preemptive process in compiled mode
 * runs mulitple parallel workers in compiled mode
+* export JSON
+* export XLSX
 
 <img src="https://github.com/user-attachments/assets/6b22c84e-9aa5-4bed-9552-ad47b84b625a" width=800 height=auto />
 
 ## TODO 
 
-- [x] export JSON
-- [ ] export XLSX
 - [ ] support headless / tool4d
 - [ ] support console output
 
