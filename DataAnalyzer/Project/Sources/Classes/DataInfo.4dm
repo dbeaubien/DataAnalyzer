@@ -428,6 +428,10 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 	
 	If ($tableAddress>0)
 		
+		If (This:C1470.dataFileHandle.eof)
+			This:C1470.dataFileHandle.offset:=0
+		End if 
+		
 		$segEOF:=This:C1470.toReal(This:C1470.logicalEOF; True:C214)
 		$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 		$blockSize:=This:C1470.blockSize
