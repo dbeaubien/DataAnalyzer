@@ -13,6 +13,7 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 
 - [ ] export JSON
 - [ ] export XLSX
+- [ ] support headless / tool4d
 
 ## page 1
 
