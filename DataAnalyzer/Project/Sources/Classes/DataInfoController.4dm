@@ -6,9 +6,9 @@ property isRunning : Boolean
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is macOS)  // && (Is compiled mode)
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Is compiled mode:C492)
 	If (This:C1470.useMultipleCores)
-		This:C1470.countCores-=2
+		This:C1470.countCores-=2  //save for UI and system
 	End if 
 	
 	This:C1470.hideTableNames:=True:C214
