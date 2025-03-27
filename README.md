@@ -9,6 +9,11 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * runs in background preemptive process in compiled mode
 * runs mulitple parallel workers (Mac only)
 
+## TODO 
+
+- [ ] export JSON
+- [ ] export XLSX
+
 ## page 1
 
 analysis starts as soon as data file is selected or dropped on the listbox
