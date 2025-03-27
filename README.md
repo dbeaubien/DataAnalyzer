@@ -11,7 +11,7 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 
 ## TODO 
 
-- [ ] export JSON
+- [x] export JSON
 - [ ] export XLSX
 - [ ] support headless / tool4d
 - [ ] support console output
