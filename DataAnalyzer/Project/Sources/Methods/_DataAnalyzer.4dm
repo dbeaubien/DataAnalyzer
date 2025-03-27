@@ -6,3 +6,4 @@ $dataInfo.dataFileHandle:=$dataInfo.dataFile.open("read")
 
 $tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
 $tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
+$dataInfo.gotTableStats($tableStats; $ctx)

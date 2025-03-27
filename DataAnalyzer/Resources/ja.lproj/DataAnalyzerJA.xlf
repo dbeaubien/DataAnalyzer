@@ -166,14 +166,14 @@
           <source>Last Operation Number:</source>
           <target>Last Operation Number:</target>
         </trans-unit>
-        
         <trans-unit resname="Data File Version:">
           <source>Data File Version:</source>
           <target>Data File Version:</target>
         </trans-unit>
-        
-        
-        
+        <trans-unit resname="Table_">
+          <source>Table </source>
+          <target>Table </target>
+        </trans-unit>
         <trans-unit resname="Select Data File…">
           <source>Select Data File…</source>
           <target>Select Data File…</target>
@@ -185,6 +185,10 @@
         <trans-unit resname="Data Tables">
           <source>Data Tables</source>
           <target>Data Tables</target>
+        </trans-unit>
+        <trans-unit resname="Hide Table Names">
+          <source>Hide Table Names</source>
+          <target>Hide Table Names</target>
         </trans-unit>
         <trans-unit resname="Information">
           <source>Information</source>

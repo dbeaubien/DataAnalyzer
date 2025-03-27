@@ -564,6 +564,11 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 	
 	return $tableStats
 	
+Function gotTableStats($tableStats : Object; $ctx : Object)
+	
+	$tableStats.complete:=True:C214
+	CALL FORM:C1391($ctx.window; $ctx.onFinish; $tableStats; $ctx)
+	
 Function readTableInfo($tableAddress : Object) : Object
 	
 	$segEOF:=This:C1470.toReal(This:C1470.logicalEOF; True:C214)
@@ -605,25 +610,20 @@ Function readTableInfo($tableAddress : Object) : Object
 				
 				$offset:=$offset+16  //Infos not used here
 				$vUUID_TableDef:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer TableDefID;  // ID TDEF 
-				
-				var $tableInfo : Object
-				$tableInfo:=This:C1470.tableInfo.query("tableNumber === :1"; $tableNumber).first()
+				$genericTableName:=Localized string:C991("Table_")+String:C10($tableNumber)
+				var $tableInfo : cs:C1710._TableInfo
+				//$tableInfo:=This.tableInfo.query("tableNumber === :1"; $tableNumber).first()
+				$tableInfo:=This:C1470.tableInfo.query("tableUUID === :1"; $vUUID_TableDef).first()
 				If ($tableInfo=Null:C1517)
-					$tableInfo:={\
-						tableNumber: $tableNumber; \
-						tableUUID: $vUUID_TableDef; \
-						nbRecords: $nb_Records; \
-						nbBlobs: $nb_Blobs; \
-						address_Taba_rec1: $addressOfTabaOf_rec1\$blockSize; \
-						address_Taba_Blob: $addressOfTabaOf_Blob\$blockSize}
+					$tableInfo:=cs:C1710._TableInfo.new($vUUID_TableDef)
 					This:C1470.tableInfo.push($tableInfo)
-				Else 
-					$tableInfo.tableUUID:=$vUUID_TableDef
-					$tableInfo.nbRecords:=$nb_Records
-					$tableInfo.nbBlobs:=$nb_Blobs
-					$tableInfo.address_Taba_rec1:=$addressOfTabaOf_rec1\$blockSize
-					$tableInfo.address_Taba_Blob:=$addressOfTabaOf_Blob\$blockSize
 				End if 
+				$tableInfo.tableNumber:=$tableNumber
+				$tableInfo.genericTableName:=$genericTableName
+				$tableInfo.nbRecords:=$nb_Records
+				$tableInfo.nbBlobs:=$nb_Blobs
+				$tableInfo.address_Taba_rec1:=$addressOfTabaOf_rec1\$blockSize
+				$tableInfo.address_Taba_Blob:=$addressOfTabaOf_Blob\$blockSize
 				
 				return $tableInfo
 				
@@ -669,19 +669,15 @@ Function readTableDefinition($tableAddress : Object) : Object
 				$vUUID_TableID:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)
 				$vTableName:=This:C1470.chunkToText($blDataBlock; ->$offset; 64; False:C215; True:C214)
 				
-				var $tableInfo : Object
+				var $tableInfo : cs:C1710._TableInfo
 				$tableInfo:=This:C1470.tableInfo.query("tableUUID === :1"; $vUUID_TableID).first()
 				If ($tableInfo=Null:C1517)
-					$tableInfo:={\
-						tableUUID: $vUUID_TableID; \
-						tableName: $vTableName}
+					$tableInfo:=cs:C1710._TableInfo.new($vUUID_TableID)
 					This:C1470.tableInfo.push($tableInfo)
-				Else 
-					$tableInfo.tableName:=$vTableName
 				End if 
+				$tableInfo.tableName:=$vTableName
 				
 				return $tableInfo
-				
 		End case 
 		
 	End if 

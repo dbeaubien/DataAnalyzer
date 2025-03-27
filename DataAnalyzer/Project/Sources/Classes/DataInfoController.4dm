@@ -1,13 +1,30 @@
 property countCores : Integer
 property useMultipleCores : Boolean
+property hideTableNames : Boolean
+property isRunning : Boolean
 
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is compiled mode)
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is macOS)  // && (Is compiled mode)
 	If (This:C1470.useMultipleCores)
 		This:C1470.countCores-=2
 	End if 
+	
+	This:C1470.hideTableNames:=True:C214
+	This:C1470.isRunning:=False:C215
+	
+Function toggleTableNames() : cs:C1710.DataInfoController
+	
+	If (This:C1470.hideTableNames)
+		OBJECT SET VISIBLE:C603(*; "tableName"; False:C215)
+		OBJECT SET VISIBLE:C603(*; "genericTableName"; True:C214)
+	Else 
+		OBJECT SET VISIBLE:C603(*; "tableName"; True:C214)
+		OBJECT SET VISIBLE:C603(*; "genericTableName"; False:C215)
+	End if 
+	
+	return This:C1470
 	
 Function _dropItemToFile() : 4D:C1709.File
 	
@@ -33,6 +50,10 @@ Function _dropItemToFile() : 4D:C1709.File
 	
 Function onDragOver() : Integer
 	
+	If (This:C1470.isRunning)
+		return -1
+	End if 
+	
 	var $file : 4D:C1709.File
 	$file:=This:C1470._dropItemToFile()
 	
@@ -53,6 +74,8 @@ Function onDrop()
 	
 Function open($dataFile : 4D:C1709.File)
 	
+	Form:C1466.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
+	
 	$ctx:={file: $dataFile; window: Current form window:C827}
 	$ctx.onFileInfo:=This:C1470._onFileInfo
 	$ctx.onTableInfo:=This:C1470._onTableInfo
@@ -63,6 +86,7 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx.useMultipleCores:=This:C1470.useMultipleCores
 	
 	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
+	This:C1470.isRunning:=True:C214
 	
 	$workerName:="DataAnalyzer"
 	CALL WORKER:C1389($workerName; Formula:C1597(preemptiveWorker); $ctx)
@@ -161,6 +185,9 @@ Function _open($ctx : Object)
 	End for each 
 	
 	var $workerNames : Collection
+	var $workerFunction : 4D:C1709.Function
+	$workerFunction:=Formula:C1597(_DataAnalyzer)
+	
 	If ($ctx.useMultipleCores)
 		$workerNames:=[]
 		For ($i; 1; $ctx.countCores)
@@ -173,36 +200,22 @@ Function _open($ctx : Object)
 	var $dataInfo2 : cs:C1710.DataInfo
 	$dataInfo2:=$dataInfo.clone()
 	
+	var $tableStats : cs:C1710._TableStats
+	
 	For each ($tableInfo; $dataInfo.tableInfo)
 		
-		$tableStats:={\
-			tableUUID: $tableInfo.tableUUID; \
-			sizeOf_rec1: 0; \
-			countOf_rec1: 0; \
-			sizeOf_blob: 0; \
-			countOf_blob: 0; \
-			sizeOf_blbT: 0; \
-			countOf_blbT: 0; \
-			sizeOf_blbP: 0; \
-			countOf_blbP: 0; \
-			maxOf_rec1: Null:C1517; \
-			minOf_rec1: Null:C1517; \
-			avgOf_rec1: Null:C1517; \
-			maxOf_blob: Null:C1517; \
-			minOf_blob: Null:C1517; \
-			avgOf_blob: Null:C1517}
+		$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
 		
 		If ($ctx.useMultipleCores)
 			$workerName:=$workerNames[$tableInfo.tableNumber%$ctx.countCores]
-			CALL WORKER:C1389($workerName; Formula:C1597(_run); $dataInfo; $tableInfo; $tableStats; $ctx)
+			CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
 		Else 
 			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
 			$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
+			$dataInfo.gotTableStats($tableStats; $ctx)
 		End if 
 		
 	End for each 
-	
-	CALL FORM:C1391($ctx.window; $ctx.onFinish; $ctx)
 	
 Function _onTableStats($tableStats : Object)
 	
@@ -243,6 +256,18 @@ Function _onTableInfo($tableInfo : Object)
 		End for each 
 	End if 
 	
-Function _onFinish($ctx : Object)
+Function _onFinish($tableStats : Object; $ctx : Object)
 	
-	OBJECT SET ENABLED:C1123(*; $ctx.objectName; True:C214)
+	var $table : Object
+	
+	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
+	If ($table=Null:C1517)
+		
+	Else 
+		$table.complete:=$tableStats.complete
+	End if 
+	
+	If (Form:C1466.tableInfo.col.query("complete === :1"; True:C214).length=Form:C1466.tableInfo.col.length)
+		OBJECT SET ENABLED:C1123(*; $ctx.objectName; True:C214)
+		Form:C1466.isRunning:=False:C215
+	End if 

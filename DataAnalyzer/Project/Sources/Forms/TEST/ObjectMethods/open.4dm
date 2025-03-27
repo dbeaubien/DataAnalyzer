@@ -1,7 +1,5 @@
 If (FORM Event:C1606.code=On Clicked:K2:4)
 	
-	Form:C1466.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
-	
 	$directoryPath:=Folder:C1567(fk documents folder:K87:21).platformPath
 	$title:=Localized string:C991("Select a data file…")
 	

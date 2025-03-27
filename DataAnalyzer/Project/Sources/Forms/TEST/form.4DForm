@@ -63,7 +63,7 @@
 					"sizingY": "grow",
 					"dropping": "custom",
 					"method": "ObjectMethods/tableInfo.4dm",
-					"selectionMode": "none",
+					"selectionMode": "multiple",
 					"columns": [
 						{
 							"header": {
@@ -83,10 +83,25 @@
 						},
 						{
 							"header": {
+								"name": "Header16",
+								"text": ":xliff:Table Name"
+							},
+							"name": "genericTableName",
+							"footer": {
+								"name": "Footer16"
+							},
+							"resizable": false,
+							"enterable": false,
+							"truncateMode": "none",
+							"width": 150,
+							"dataSource": "This:C1470.genericTableName"
+						},
+						{
+							"header": {
 								"name": "Header2",
 								"text": ":xliff:Table Name"
 							},
-							"name": "Column2",
+							"name": "tableName",
 							"footer": {
 								"name": "Footer2"
 							},
@@ -312,6 +327,22 @@
 						"onClick"
 					],
 					"method": "ObjectMethods/open.4dm",
+					"focusable": false
+				},
+				"hideTableNames": {
+					"type": "checkbox",
+					"text": ":xliff:Hide Table Names",
+					"top": 32,
+					"left": 260,
+					"width": 206,
+					"height": 18,
+					"events": [
+						"onLoad",
+						"onClick"
+					],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.hideTableNames",
+					"method": "ObjectMethods/hideTableNames.4dm",
 					"focusable": false
 				}
 			}
@@ -1289,7 +1320,7 @@
 			}
 		}
 	],
-	"geometryStamp": 1427,
+	"geometryStamp": 1437,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
