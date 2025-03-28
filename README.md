@@ -2,6 +2,19 @@
 
 based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=77253)
 
+## dependencies.json
+
+ ```json
+{
+	"dependencies": {
+		"DataAnalyzer": {
+			"github": "miyako/DataAnalyzer",
+			"version": "latest"
+		}
+	}
+}
+```
+
 ## Modifications
 
 * resolve data file alias or shortcut
