@@ -10,12 +10,15 @@ property startTime : Integer
 property duration : Text
 property tableInfo : Object
 property objectName : Text
+property objectNamePP : Text
 
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
 	If (This:C1470.countCores>3)
 		This:C1470.countCores-=2  //save for UI and system
+	Else 
+		This:C1470.countCores:=1
 	End if 
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
@@ -23,6 +26,10 @@ Class constructor
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
 	This:C1470.dispatchInterval:=6  //every 0.1 seconds
 	This:C1470.objectName:="open"
+	This:C1470.objectNamePP:="useMultipleCores"
+	This:C1470.useMultipleCores:=False:C215
+	
+	OBJECT SET ENABLED:C1123(*; This:C1470.objectNamePP; This:C1470.countCores>1)
 	
 Function toJson() : 4D:C1709.File
 	
@@ -213,8 +220,6 @@ Function open($dataFile : 4D:C1709.File)
 	
 	This:C1470.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	This:C1470.JSON:={}
-	
-	This:C1470.useMultipleCores:=(This:C1470.countCores>1) && (Macintosh option down:C545)
 	
 	If (This:C1470.useMultipleCores)
 		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes

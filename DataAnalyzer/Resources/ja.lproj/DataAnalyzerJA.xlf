@@ -198,6 +198,10 @@
           <source>Hide Table Names</source>
           <target>Hide Table Names</target>
         </trans-unit>
+        <trans-unit resname="Parallel Processing">
+          <source>Parallel Processing</source>
+          <target>Parallel Processing</target>
+        </trans-unit>
         <trans-unit resname="Information">
           <source>Information</source>
           <target>Information</target>

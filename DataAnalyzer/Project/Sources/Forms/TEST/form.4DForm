@@ -322,7 +322,7 @@
 					"text": ":xliff:Select Data File…",
 					"top": 30,
 					"left": 30,
-					"width": 216,
+					"width": 176,
 					"height": 22,
 					"events": [
 						"onClick"
@@ -334,8 +334,8 @@
 					"type": "checkbox",
 					"text": ":xliff:Hide Table Names",
 					"top": 32,
-					"left": 260,
-					"width": 206,
+					"left": 215,
+					"width": 146,
 					"height": 18,
 					"events": [
 						"onLoad",
@@ -384,6 +384,21 @@
 					"fill": "transparent",
 					"borderStyle": "none",
 					"textAlign": "right"
+				},
+				"useMultipleCores": {
+					"type": "checkbox",
+					"text": ":xliff:Parallel Processing",
+					"top": 32,
+					"left": 355,
+					"width": 146,
+					"height": 18,
+					"events": [
+						"onLoad",
+						"onClick"
+					],
+					"dataSourceTypeHint": "boolean",
+					"dataSource": "Form:C1466.useMultipleCores",
+					"focusable": false
 				}
 			}
 		},
@@ -1360,7 +1375,7 @@
 			}
 		}
 	],
-	"geometryStamp": 1520,
+	"geometryStamp": 1542,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
