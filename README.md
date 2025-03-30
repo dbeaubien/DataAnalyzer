@@ -1,6 +1,24 @@
+![version](https://img.shields.io/badge/version-20%2B-E23089)
+![platform](https://img.shields.io/static/v1?label=platform&message=mac-intel%20|%20mac-arm%20|%20win-64&color=blue)
+[![license](https://img.shields.io/github/license/miyako/DataAnalyzer)](LICENSE)
+![downloads](https://img.shields.io/github/downloads/miyako/DataAnalyzer/total)
+
 # DataAnalyzer
 
 based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=77253)
+
+## dependencies.json
+
+ ```json
+{
+	"dependencies": {
+		"DataAnalyzer": {
+			"github": "miyako/DataAnalyzer",
+			"version": "latest"
+		}
+	}
+}
+```
 
 ## Modifications
 
