@@ -10,10 +10,10 @@ property updateInterval : Real
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Is compiled mode:C492)
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is compiled mode)
 	If (This:C1470.useMultipleCores)
 		This:C1470.countCores-=2  //save for UI and system
-		This:C1470.updateInterval:=This:C1470.countCores*100
+		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
 	Else 
 		This:C1470.updateInterval:=100  //every 0.1 seconds
 	End if 
@@ -318,53 +318,56 @@ Function _open($ctx : Object)
 		End if 
 	End for each 
 	
-	var $workerNames : Collection
+	//var $workerNames : Collection
 	var $workerFunction : 4D:C1709.Function
 	
 	$workerFunction:=$ctx.workerFunction
-	$workerNames:=$ctx.workerNames.copy()
-	$workerNames.remove($workerNames.indexOf(Current process name:C1392))
+	//$workerNames:=$ctx.workerNames.copy()
+	//$workerNames.remove($workerNames.indexOf(Current process name))
 	
-	var $dataInfo2 : cs:C1710.DataInfo
-	$dataInfo2:=$dataInfo.clone()
+	$ctx.tableInfo:=$dataInfo.tableInfo.copy(ck shared:K85:29)
 	
 	var $tableStats : cs:C1710._TableStats
 	
 	If ($dataInfo.tableInfo.length=0)
 		CALL FORM:C1391($ctx.window; $ctx.onFinish; {tableUUID: ""}; $ctx)
 	Else 
-		$idx:=0
-		For each ($tableInfo; $dataInfo.tableInfo)
-			$idx+=1
-			$last:=($idx=$dataInfo.tableInfo.length)
-			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
-			If ($ctx.useMultipleCores) && (Not:C34($last))
-				Repeat 
-					$processes:=Process activity:C1495(Processes only:K5:35).processes.query("name in :1 and state == :2"; $workerNames; Waiting for user event:K13:9)
-					If ($processes.length=0)  //all workers are busy
-						DELAY PROCESS:C323(Current process:C322; $ctx.dispatchInterval)
-					Else 
-						$process:=$processes[0].number
-						break
-					End if 
-				Until (False:C215)
-				CALL WORKER:C1389($process; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
-			Else 
+		If ($ctx.useMultipleCores)
+			For each ($workerName; $ctx.workerNames)
+				CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; Null:C1517; Null:C1517; $ctx)
+			End for each 
+		Else 
+			For each ($tableInfo; $dataInfo.tableInfo)
+				$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
 				$workerFunction.call(Null:C1517; $dataInfo; $tableInfo; $tableStats; $ctx)
-			End if 
-		End for each 
+			End for each 
+		End if 
 	End if 
 	
 Function _processTable($dataInfo : cs:C1710.DataInfo; $tableInfo : Object; $tableStats : Object; $ctx : Object)
 	
-	If ($dataInfo.dataFileHandle=Null:C1517)
-		$dataInfo:=OB Copy:C1225($dataInfo)
-		$dataInfo.dataFileHandle:=$dataInfo.dataFile.open("read")
+	If ($ctx.useMultipleCores)
+		$tableInfo:=$ctx.tableInfo.query("processing == null").first()
+		If ($tableInfo=Null:C1517)
+			KILL WORKER:C1390
+			return 
+		Else 
+			$dataInfo:=OB Copy:C1225($dataInfo)
+			$dataInfo.dataFileHandle:=$dataInfo.dataFile.open("read")
+			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
+			Use ($tableInfo)
+				$tableInfo.processing:=True:C214
+			End use 
+		End if 
 	End if 
 	
 	$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
 	$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
 	$dataInfo.gotTableStats($tableStats; $ctx)
+	
+	If ($ctx.useMultipleCores)
+		CALL WORKER:C1389(Current process name:C1392; $ctx.workerFunction; $dataInfo; Null:C1517; Null:C1517; $ctx)
+	End if 
 	
 Function _onTableStats($tableStats : Object)
 	
