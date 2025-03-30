@@ -372,6 +372,18 @@
 					],
 					"focusable": false,
 					"method": "ObjectMethods/exportX.4dm"
+				},
+				"Input": {
+					"type": "input",
+					"left": 681,
+					"top": 32,
+					"width": 108,
+					"height": 17,
+					"dataSource": "Form:C1466.duration",
+					"enterable": false,
+					"fill": "transparent",
+					"borderStyle": "none",
+					"textAlign": "right"
 				}
 			}
 		},
@@ -1348,7 +1360,7 @@
 			}
 		}
 	],
-	"geometryStamp": 1511,
+	"geometryStamp": 1520,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",

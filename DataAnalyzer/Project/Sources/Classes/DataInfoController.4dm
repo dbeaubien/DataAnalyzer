@@ -6,11 +6,17 @@ property JSON : Object
 property exportFileJson : 4D:C1709.File
 property dispatchInterval : Integer
 property updateInterval : Real
+property startTime : Integer
+property duration : Text
+property tableInfo : Object
+property objectName : Text
 
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3)  // && (Is compiled mode)
+	//This.useMultipleCores:=(This.countCores>3)   && (Is compiled mode)
+	This:C1470.useMultipleCores:=False:C215
+	
 	If (This:C1470.useMultipleCores)
 		This:C1470.countCores-=2  //save for UI and system
 		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
@@ -23,6 +29,7 @@ Class constructor
 	This:C1470.JSON:={}
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
 	This:C1470.dispatchInterval:=6  //every 0.1 seconds
+	This:C1470.objectName:="open"
 	
 Function toJson() : 4D:C1709.File
 	
@@ -93,11 +100,18 @@ Function _killAll()
 	
 	var $process : Object
 	$processes:=Process activity:C1495(Processes only:K5:35).processes
-	For each ($process; $processes)
-		If (Match regex:C1019("DataAnalyzer\\s\\(\\d\\)"; $process.name))
+	If (This:C1470.useMultipleCores)
+		For each ($process; $processes)
+			If (Match regex:C1019("DataAnalyzer\\s\\(\\d\\)"; $process.name))
+				ABORT PROCESS BY ID:C1634($process.ID)
+			End if 
+		End for each 
+	Else 
+		$process:=$processes.query("name == :1"; "DataAnalyzer").first()
+		If ($process#Null:C1517)
 			ABORT PROCESS BY ID:C1634($process.ID)
 		End if 
-	End for each 
+	End if 
 	
 Function _getWorkerName($i : Integer) : Text
 	
@@ -181,9 +195,30 @@ Function onUnload()
 	
 	Form:C1466._killAll()
 	
+Function start() : cs:C1710.DataInfoController
+	
+	OBJECT SET ENABLED:C1123(*; This:C1470.objectName; False:C215)
+	This:C1470.isRunning:=True:C214
+	This:C1470.startTime:=Milliseconds:C459
+	
+	return This:C1470
+	
+Function updateDuration() : cs:C1710.DataInfoController
+	
+	This:C1470.duration:=[String:C10(Abs:C99(Milliseconds:C459-This:C1470.startTime)/1000; "#,###,###,###,##0.##0"); "ms"].join(" ")
+	
+	return This:C1470
+	
+Function stop() : cs:C1710.DataInfoController
+	
+	This:C1470.isRunning:=False:C215
+	OBJECT SET ENABLED:C1123(*; This:C1470.objectName; True:C214)
+	
+	return This:C1470
+	
 Function open($dataFile : 4D:C1709.File)
 	
-	Form:C1466.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
+	This:C1470.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	This:C1470.JSON:={}
 	
 	$ctx:={file: $dataFile; window: Current form window:C827}
@@ -191,17 +226,13 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx.onTableInfo:=This:C1470._onTableInfo
 	$ctx.onTableStats:=This:C1470._onTableStats
 	$ctx.onFinish:=This:C1470._onFinish
-	$ctx.objectName:="open"
 	$ctx.countCores:=This:C1470.countCores
 	$ctx.useMultipleCores:=This:C1470.useMultipleCores
 	$ctx.workerFunction:=This:C1470._processTable
 	$ctx.updateInterval:=This:C1470.updateInterval
 	$ctx.dispatchInterval:=This:C1470.dispatchInterval
 	
-	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
-	This:C1470.isRunning:=True:C214
-	
-	Form:C1466.toggleExportButton()
+	This:C1470.start().toggleExportButton()
 	
 	var $workerNames : Collection
 	var $workerName : Text
@@ -318,13 +349,6 @@ Function _open($ctx : Object)
 		End if 
 	End for each 
 	
-	//var $workerNames : Collection
-	var $workerFunction : 4D:C1709.Function
-	
-	$workerFunction:=$ctx.workerFunction
-	//$workerNames:=$ctx.workerNames.copy()
-	//$workerNames.remove($workerNames.indexOf(Current process name))
-	
 	$ctx.tableInfo:=$dataInfo.tableInfo.copy(ck shared:K85:29)
 	
 	var $tableStats : cs:C1710._TableStats
@@ -334,30 +358,30 @@ Function _open($ctx : Object)
 	Else 
 		If ($ctx.useMultipleCores)
 			For each ($workerName; $ctx.workerNames)
-				CALL WORKER:C1389($workerName; $workerFunction; $dataInfo; Null:C1517; Null:C1517; $ctx)
+				$tableInfo:=Null:C1517
+				$tableStats:=Null:C1517
+				CALL WORKER:C1389($workerName; $ctx.workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
 			End for each 
 		Else 
 			For each ($tableInfo; $dataInfo.tableInfo)
 				$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
-				$workerFunction.call(Null:C1517; $dataInfo; $tableInfo; $tableStats; $ctx)
+				$ctx.workerFunction($dataInfo; $tableInfo; $tableStats; $ctx)
 			End for each 
 		End if 
 	End if 
 	
 Function _processTable($dataInfo : cs:C1710.DataInfo; $tableInfo : Object; $tableStats : Object; $ctx : Object)
 	
-	If ($ctx.useMultipleCores)
-		$tableInfo:=$ctx.tableInfo.query("processing == null").first()
+	If ($tableInfo=Null:C1517)
+		$tableInfo:=$ctx.tableInfo.shift()
 		If ($tableInfo=Null:C1517)
 			KILL WORKER:C1390
 			return 
 		Else 
+			$tableInfo:=OB Copy:C1225($tableInfo)
 			$dataInfo:=OB Copy:C1225($dataInfo)
 			$dataInfo.dataFileHandle:=$dataInfo.dataFile.open("read")
 			$tableStats:=cs:C1710._TableStats.new($tableInfo.tableUUID)
-			Use ($tableInfo)
-				$tableInfo.processing:=True:C214
-			End use 
 		End if 
 	End if 
 	
@@ -366,17 +390,20 @@ Function _processTable($dataInfo : cs:C1710.DataInfo; $tableInfo : Object; $tabl
 	$dataInfo.gotTableStats($tableStats; $ctx)
 	
 	If ($ctx.useMultipleCores)
-		CALL WORKER:C1389(Current process name:C1392; $ctx.workerFunction; $dataInfo; Null:C1517; Null:C1517; $ctx)
+		$tableInfo:=Null:C1517
+		$tableStats:=Null:C1517
+		CALL WORKER:C1389(Current process name:C1392; $ctx.workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
 	End if 
 	
 Function _onTableStats($tableStats : Object)
 	
+	Form:C1466.updateDuration()
+	
 	var $table : Object
 	
 	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
-	If ($table=Null:C1517)
-		
-	Else 
+	
+	If ($table#Null:C1517)
 		$table.sizeOf_rec1:=$tableStats.sizeOf_rec1
 		$table.countOf_rec1:=$tableStats.countOf_rec1
 		$table.maxOf_rec1:=$tableStats.maxOf_rec1
@@ -392,9 +419,13 @@ Function _onTableStats($tableStats : Object)
 	
 Function _onFileInfo($fileInfo : Object)
 	
+	Form:C1466.updateDuration()
+	
 	Form:C1466.fileInfo:=$fileInfo
 	
 Function _onTableInfo($tableInfo : Object)
+	
+	Form:C1466.updateDuration()
 	
 	var $table : Object
 	
@@ -410,19 +441,26 @@ Function _onTableInfo($tableInfo : Object)
 	
 Function _onFinish($tableStats : Object; $ctx : Object)
 	
-	var $table : Object
+	Form:C1466.updateDuration()
 	
-	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
+	var $table : Object
+	var $this; $tableInfo : Object
+	var $col : Collection
+	
+	$this:=Form:C1466
+	$tableInfo:=$this.tableInfo
+	$col:=$tableInfo.col
+	$table:=$col.query("tableUUID === :1"; $tableStats.tableUUID).first()
 	
 	If ($table#Null:C1517)
 		$table.complete:=$tableStats.complete
 	End if 
 	
-	If (Form:C1466.tableInfo.col.query("complete === :1"; True:C214).length=Form:C1466.tableInfo.col.length)
-		OBJECT SET ENABLED:C1123(*; $ctx.objectName; True:C214)
-		Form:C1466.isRunning:=False:C215
+	If ($col.query("complete === :1"; True:C214).length=$col.length)
 		
-		Form:C1466.JSON.data:=Form:C1466.tableInfo.col.extract(\
+		$this.stop().toggleExportButton()
+		
+		$this.JSON.data:=$col.extract(\
 			"tableNumber"; "tableNumber"; \
 			"tableName"; "tableName"; \
 			"tableUUID"; "tableUUID"; \
@@ -439,9 +477,8 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 			"minOf_blob"; "blobs.min"; \
 			"avgOf_blob"; "blobs.average")
 		
-		Form:C1466.JSON.info:=Form:C1466.fileInfo
+		$this.JSON.info:=$this.fileInfo
 		
-		Form:C1466.toggleExportButton()
 		For each ($workerName; $ctx.workerNames)
 			KILL WORKER:C1390($workerName)
 		End for each 

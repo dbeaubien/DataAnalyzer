@@ -120,16 +120,6 @@ Class constructor
 	This:C1470.tableAddress.TDEF:=[]
 	This:C1470.tableAddress.DTab:=[]
 	
-Function clone() : cs:C1710.DataInfo
-	
-	var $that : cs:C1710.DataInfo
-	
-	If (This:C1470.dataFileHandle#Null:C1517)
-		
-	End if 
-	
-	return $that
-	
 Function open($dataFile : 4D:C1709.File) : cs:C1710.DataInfo
 	
 	If (This:C1470.isDataFile($dataFile))
