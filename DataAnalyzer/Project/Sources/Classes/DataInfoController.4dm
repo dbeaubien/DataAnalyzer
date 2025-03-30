@@ -14,6 +14,9 @@ property objectName : Text
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
+	If (This:C1470.countCores>3)
+		This:C1470.countCores-=2  //save for UI and system
+	End if 
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
@@ -211,10 +214,9 @@ Function open($dataFile : 4D:C1709.File)
 	This:C1470.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	This:C1470.JSON:={}
 	
-	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Macintosh option down:C545)
+	This:C1470.useMultipleCores:=(This:C1470.countCores>1) && (Macintosh option down:C545)
 	
 	If (This:C1470.useMultipleCores)
-		This:C1470.countCores-=2  //save for UI and system
 		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
 	Else 
 		This:C1470.updateInterval:=100  //every 0.1 seconds
