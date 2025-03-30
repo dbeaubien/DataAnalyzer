@@ -4,6 +4,8 @@ property hideTableNames : Boolean
 property isRunning : Boolean
 property JSON : Object
 property exportFileJson : 4D:C1709.File
+property dispatchInterval : Integer
+property updateInterval : Real
 
 Class constructor
 	
@@ -11,12 +13,16 @@ Class constructor
 	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Is compiled mode:C492)
 	If (This:C1470.useMultipleCores)
 		This:C1470.countCores-=2  //save for UI and system
+		This:C1470.updateInterval:=This:C1470.countCores*100
+	Else 
+		This:C1470.updateInterval:=100  //every 0.1 seconds
 	End if 
 	
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
+	This:C1470.dispatchInterval:=6  //every 0.1 seconds
 	
 Function toJson() : 4D:C1709.File
 	
@@ -82,6 +88,16 @@ Function launch($file : 4D:C1709.File)
 Function show($file : 4D:C1709.File)
 	
 	SHOW ON DISK:C922($file.platformPath)
+	
+Function _killAll()
+	
+	var $process : Object
+	$processes:=Process activity:C1495(Processes only:K5:35).processes
+	For each ($process; $processes)
+		If (Match regex:C1019("DataAnalyzer\\s\\(\\d\\)"; $process.name))
+			ABORT PROCESS BY ID:C1634($process.ID)
+		End if 
+	End for each 
 	
 Function _getWorkerName($i : Integer) : Text
 	
@@ -161,6 +177,10 @@ Function onDrop()
 		This:C1470.open($file)
 	End if 
 	
+Function onUnload()
+	
+	Form:C1466._killAll()
+	
 Function open($dataFile : 4D:C1709.File)
 	
 	Form:C1466.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
@@ -174,7 +194,9 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx.objectName:="open"
 	$ctx.countCores:=This:C1470.countCores
 	$ctx.useMultipleCores:=This:C1470.useMultipleCores
-	$ctx.workerFunction:=Formula:C1597(_DataAnalyzer)
+	$ctx.workerFunction:=This:C1470._processTable
+	$ctx.updateInterval:=This:C1470.updateInterval
+	$ctx.dispatchInterval:=This:C1470.dispatchInterval
 	
 	OBJECT SET ENABLED:C1123(*; $ctx.objectName; False:C215)
 	This:C1470.isRunning:=True:C214
@@ -319,22 +341,30 @@ Function _open($ctx : Object)
 			If ($ctx.useMultipleCores) && (Not:C34($last))
 				Repeat 
 					$processes:=Process activity:C1495(Processes only:K5:35).processes.query("name in :1 and state == :2"; $workerNames; Waiting for user event:K13:9)
-					If ($processes.length=0)
-						DELAY PROCESS:C323(Current process:C322; 10)
+					If ($processes.length=0)  //all workers are busy
+						DELAY PROCESS:C323(Current process:C322; $ctx.dispatchInterval)
 					Else 
 						$process:=$processes[0].number
 						break
 					End if 
 				Until (False:C215)
 				CALL WORKER:C1389($process; $workerFunction; $dataInfo; $tableInfo; $tableStats; $ctx)
-				DELAY PROCESS:C323(Current process:C322; 10)
 			Else 
-				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
-				$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
-				$dataInfo.gotTableStats($tableStats; $ctx)
+				$workerFunction.call(Null:C1517; $dataInfo; $tableInfo; $tableStats; $ctx)
 			End if 
 		End for each 
 	End if 
+	
+Function _processTable($dataInfo : cs:C1710.DataInfo; $tableInfo : Object; $tableStats : Object; $ctx : Object)
+	
+	If ($dataInfo.dataFileHandle=Null:C1517)
+		$dataInfo:=OB Copy:C1225($dataInfo)
+		$dataInfo.dataFileHandle:=$dataInfo.dataFile.open("read")
+	End if 
+	
+	$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_rec1; $tableStats; $ctx)
+	$tableStats:=$dataInfo.getTableStats($tableInfo.address_Taba_Blob; $tableStats; $ctx)
+	$dataInfo.gotTableStats($tableStats; $ctx)
 	
 Function _onTableStats($tableStats : Object)
 	

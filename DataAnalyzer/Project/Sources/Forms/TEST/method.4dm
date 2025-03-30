@@ -13,4 +13,8 @@ Case of
 			
 		End if 
 		
+	: ($event.code=On Unload:K2:2)
+		
+		Form:C1466.onUnload()
+		
 End case 

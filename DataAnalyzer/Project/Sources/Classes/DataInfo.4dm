@@ -66,7 +66,6 @@ property tableInfo : Collection
 property blockType : Object
 property numberOfDataSegments : Integer
 property addressTablesOfDataTablesAddress : Text
-property interval : Integer
 
 Class extends Info
 
@@ -120,8 +119,6 @@ Class constructor
 	This:C1470.tableAddress:={}
 	This:C1470.tableAddress.TDEF:=[]
 	This:C1470.tableAddress.DTab:=[]
-	
-	This:C1470.interval:=49
 	
 Function clone() : cs:C1710.DataInfo
 	
@@ -436,7 +433,7 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 		$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 		$blockSize:=This:C1470.blockSize
 		
-		$interval:=This:C1470.interval
+		$interval:=$ctx.updateInterval
 		
 		$level:=0
 		$type:=This:C1470.blockType.Taba
