@@ -14,16 +14,6 @@ property objectName : Text
 Class constructor
 	
 	This:C1470.countCores:=System info:C1571.cores
-	//This.useMultipleCores:=(This.countCores>3)   && (Is compiled mode)
-	This:C1470.useMultipleCores:=False:C215
-	
-	If (This:C1470.useMultipleCores)
-		This:C1470.countCores-=2  //save for UI and system
-		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
-	Else 
-		This:C1470.updateInterval:=100  //every 0.1 seconds
-	End if 
-	
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
@@ -205,7 +195,7 @@ Function start() : cs:C1710.DataInfoController
 	
 Function updateDuration() : cs:C1710.DataInfoController
 	
-	This:C1470.duration:=[String:C10(Abs:C99(Milliseconds:C459-This:C1470.startTime)/1000; "#,###,###,###,##0.##0"); "ms"].join(" ")
+	This:C1470.duration:=[String:C10(Abs:C99(Milliseconds:C459-This:C1470.startTime)/1000; "#,###,###,###,##0.0"); "s"].join(" ")
 	
 	return This:C1470
 	
@@ -220,6 +210,15 @@ Function open($dataFile : 4D:C1709.File)
 	
 	This:C1470.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	This:C1470.JSON:={}
+	
+	This:C1470.useMultipleCores:=(This:C1470.countCores>3) && (Macintosh option down:C545)
+	
+	If (This:C1470.useMultipleCores)
+		This:C1470.countCores-=2  //save for UI and system
+		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
+	Else 
+		This:C1470.updateInterval:=100  //every 0.1 seconds
+	End if 
 	
 	$ctx:={file: $dataFile; window: Current form window:C827}
 	$ctx.onFileInfo:=This:C1470._onFileInfo
