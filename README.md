@@ -30,11 +30,6 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * export JSON
 * export XLSX
 
-## TODO 
-
-- [ ] support headless / tool4d
-- [ ] support console output
-
 ## page 1
 
 analysis starts as soon as data file is selected or dropped on the listbox
