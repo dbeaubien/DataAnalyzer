@@ -53,6 +53,6 @@ basic stats about the data file
 tool4d.app/Contents/MacOS/tool4d
  --project DataAnalyzer.4DProject
  --dataless
- --user-param=data.4DD,test.xlsx
+ --user-param=data.4DD,report.xlsx
  --startup-method=run
 ```
