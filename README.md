@@ -46,3 +46,13 @@ analysis starts as soon as data file is selected or dropped on the listbox
 basic stats about the data file
 
 <img src="https://github.com/user-attachments/assets/624ed5ab-4b49-4000-9f27-8019f6ac2fc6" width=800 height=auto />
+
+## CLI
+
+```
+tool4d.app/Contents/MacOS/tool4d
+ --project DataAnalyzer.4DProject
+ --dataless
+ --user-param=data.4DD,test.xlsx
+ --startup-method=run
+```
