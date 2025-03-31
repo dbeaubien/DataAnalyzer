@@ -53,6 +53,9 @@ basic stats about the data file
 tool4d.app/Contents/MacOS/tool4d
  --project DataAnalyzer.4DProject
  --dataless
- --user-param=data.4DD,report.xlsx
+ --user-param=data.4DD,report.xlsx,report.json
  --startup-method=run
 ```
+
+* `--user-param`: pass comma-separated paths of data, xlsx output, json output. the path format of the data file (POSIX or platform) is assumed for the outfiles.
+* `--startup-method`: always `run`
