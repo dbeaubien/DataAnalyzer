@@ -29,11 +29,10 @@ Class constructor
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
 	This:C1470.dispatchInterval:=This:C1470.isInterpretedMode ? 12 : 6  //every 0.1 seconds
 	This:C1470.updateIntervalUnit:=This:C1470.isInterpretedMode ? 200 : 100  //every 0.1 seconds
-	This:C1470.objectName:="open"
-	This:C1470.objectNamePP:="useMultipleCores"
+	
 	This:C1470.useMultipleCores:=False:C215
 	
-	OBJECT SET ENABLED:C1123(*; This:C1470.objectNamePP; This:C1470.countCores>1)
+	This:C1470.toggleParallelProcessing()
 	
 Function toJson() : 4D:C1709.File
 	
@@ -100,30 +99,19 @@ Function show($file : 4D:C1709.File)
 	
 	SHOW ON DISK:C922($file.platformPath)
 	
-Function _killAll()
+	//MARK:-Form Object States
 	
-	var $process : Object
-	$processes:=Process activity:C1495(Processes only:K5:35).processes
-	If (This:C1470.useMultipleCores)
-		For each ($process; $processes)
-			If (Match regex:C1019("DataAnalyzer\\s\\(\\d\\)"; $process.name))
-				ABORT PROCESS BY ID:C1634($process.ID)
-			End if 
-		End for each 
-	Else 
-		$process:=$processes.query("name == :1"; "DataAnalyzer").first()
-		If ($process#Null:C1517)
-			ABORT PROCESS BY ID:C1634($process.ID)
-		End if 
-	End if 
+Function toggleSelectDataFile() : cs:C1710.DataInfoController
 	
-Function _getWorkerName($i : Integer) : Text
+	OBJECT SET ENABLED:C1123(*; "open"; Not:C34(This:C1470.isRunning))
 	
-	If ($i=0)
-		return "DataAnalyzer"
-	Else 
-		return ["DataAnalyzer"; " "; "("; $i; ")"].join("")
-	End if 
+	return This:C1470
+	
+Function toggleParallelProcessing() : cs:C1710.DataInfoController
+	
+	OBJECT SET ENABLED:C1123(*; "useMultipleCores"; This:C1470.countCores>1)
+	
+	return This:C1470
 	
 Function toggleExportButton() : cs:C1710.DataInfoController
 	
@@ -149,6 +137,8 @@ Function toggleTableNames() : cs:C1710.DataInfoController
 	
 	return This:C1470
 	
+	//MARK:-
+	
 Function _dropItemToFile() : 4D:C1709.File
 	
 	var $path : Text
@@ -170,6 +160,33 @@ Function _dropItemToFile() : 4D:C1709.File
 	End if 
 	
 	return $file
+	
+Function _getWorkerName($i : Integer) : Text
+	
+	If ($i=0)
+		return "DataAnalyzer"
+	Else 
+		return ["DataAnalyzer"; " "; "("; $i; ")"].join("")
+	End if 
+	
+Function _killAll()
+	
+	var $process : Object
+	$processes:=Process activity:C1495(Processes only:K5:35).processes
+	If (This:C1470.useMultipleCores)
+		For each ($process; $processes)
+			If (Match regex:C1019("DataAnalyzer\\s\\(\\d\\)"; $process.name))
+				ABORT PROCESS BY ID:C1634($process.ID)
+			End if 
+		End for each 
+	Else 
+		$process:=$processes.query("name == :1"; "DataAnalyzer").first()
+		If ($process#Null:C1517)
+			ABORT PROCESS BY ID:C1634($process.ID)
+		End if 
+	End if 
+	
+	//MARK:-Form Events
 	
 Function onDragOver() : Integer
 	
@@ -203,11 +220,14 @@ Function onUnload()
 	
 	Form:C1466._killAll()
 	
+	//MARK:-
+	
 Function start() : cs:C1710.DataInfoController
 	
-	OBJECT SET ENABLED:C1123(*; This:C1470.objectName; False:C215)
-	This:C1470.isRunning:=True:C214
 	This:C1470.startTime:=Milliseconds:C459
+	
+	This:C1470.isRunning:=True:C214
+	This:C1470.toggleSelectDataFile()
 	
 	return This:C1470
 	
@@ -220,7 +240,7 @@ Function updateDuration() : cs:C1710.DataInfoController
 Function stop() : cs:C1710.DataInfoController
 	
 	This:C1470.isRunning:=False:C215
-	OBJECT SET ENABLED:C1123(*; This:C1470.objectName; True:C214)
+	This:C1470.toggleSelectDataFile()
 	
 	return This:C1470
 	
@@ -270,6 +290,8 @@ Function open($dataFile : 4D:C1709.File)
 	End for each 
 	
 	CALL WORKER:C1389($workerNames[0]; This:C1470._open; $ctx)
+	
+	//MARK:-
 	
 Function _open($ctx : Object)
 	
