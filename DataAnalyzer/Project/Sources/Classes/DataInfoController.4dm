@@ -6,11 +6,13 @@ property JSON : Object
 property exportFileJson : 4D:C1709.File
 property dispatchInterval : Integer
 property updateInterval : Real
+property updateIntervalUnit : Integer
 property startTime : Integer
 property duration : Text
 property tableInfo : Object
 property objectName : Text
 property objectNamePP : Text
+property isInterpretedMode : Boolean
 
 Class constructor
 	
@@ -20,11 +22,13 @@ Class constructor
 	Else 
 		This:C1470.countCores:=1
 	End if 
+	This:C1470.isInterpretedMode:=Not:C34(Is compiled mode:C492)
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
-	This:C1470.dispatchInterval:=6  //every 0.1 seconds
+	This:C1470.dispatchInterval:=This:C1470.isInterpretedMode ? 12 : 6  //every 0.1 seconds
+	This:C1470.updateIntervalUnit:=This:C1470.isInterpretedMode ? 200 : 100  //every 0.1 seconds
 	This:C1470.objectName:="open"
 	This:C1470.objectNamePP:="useMultipleCores"
 	This:C1470.useMultipleCores:=False:C215
@@ -222,9 +226,9 @@ Function open($dataFile : 4D:C1709.File)
 	This:C1470.JSON:={}
 	
 	If (This:C1470.useMultipleCores)
-		This:C1470.updateInterval:=This:C1470.countCores*100  //every 0.1 seconds, split by processes
+		This:C1470.updateInterval:=This:C1470.countCores*This:C1470.updateIntervalUnit
 	Else 
-		This:C1470.updateInterval:=100  //every 0.1 seconds
+		This:C1470.updateInterval:=This:C1470.updateIntervalUnit
 	End if 
 	
 	$ctx:={file: $dataFile; window: Current form window:C827}
@@ -354,6 +358,8 @@ Function _open($ctx : Object)
 			CALL FORM:C1391($ctx.window; $ctx.onTableInfo; $tableInfo)
 		End if 
 	End for each 
+	
+	$dataInfo.tableInfo:=$dataInfo.tableInfo.orderBy("nbRecords asc")
 	
 	$ctx.tableInfo:=$dataInfo.tableInfo.copy(ck shared:K85:29)
 	
