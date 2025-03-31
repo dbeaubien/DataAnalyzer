@@ -338,7 +338,6 @@
 					"width": 146,
 					"height": 18,
 					"events": [
-						"onLoad",
 						"onClick"
 					],
 					"dataSourceTypeHint": "boolean",
@@ -354,7 +353,6 @@
 					"width": 176,
 					"height": 22,
 					"events": [
-						"onLoad",
 						"onClick"
 					],
 					"focusable": false,

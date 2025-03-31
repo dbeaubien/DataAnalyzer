@@ -3,10 +3,6 @@ var $event : Object
 $event:=FORM Event:C1606
 
 Case of 
-	: ($event.code=On Load:K2:1)
-		
-		Form:C1466.toggleExportButton()
-		
 	: ($event.code=On Clicked:K2:4)
 		
 		var $file : 4D:C1709.File
