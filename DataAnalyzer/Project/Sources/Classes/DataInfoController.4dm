@@ -195,6 +195,10 @@ Function onDrop()
 		This:C1470.open($file)
 	End if 
 	
+Function onLoad()
+	
+	Form:C1466.toggleExportButton().toggleTableNames()
+	
 Function onUnload()
 	
 	Form:C1466._killAll()

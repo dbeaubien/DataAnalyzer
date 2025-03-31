@@ -7,11 +7,16 @@ Case of
 		
 		If (Not:C34(OB Instance of:C1731(Form:C1466; cs:C1710.DataInfoController)))
 			
-			TRACE:C157  //please use "DataAnalyzer" method! 
+			ARRAY LONGINT:C221($events; 1)
+			$events{1}:=On Unload:K2:2
+			OBJECT SET EVENTS:C1239(*; ""; $events; Disable events others unchanged:K42:39)
+			OBJECT SET ENABLED:C1123(*; "@"; False:C215)
 			
-			CANCEL:C270
+			return   //please use "DataAnalyzer" method! 
 			
 		End if 
+		
+		Form:C1466.onLoad()
 		
 	: ($event.code=On Unload:K2:2)
 		
