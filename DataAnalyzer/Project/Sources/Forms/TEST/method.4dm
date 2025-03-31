@@ -5,7 +5,7 @@ $event:=FORM Event:C1606
 Case of 
 	: ($event.code=On Load:K2:1)
 		
-		If (Not:C34(OB Instance of:C1731(Form:C1466; cs:C1710.DataInfoController)))
+		If (Not:C34(OB Instance of:C1731(Form:C1466; cs:C1710.DataAnalyzerForm)))
 			
 			ARRAY LONGINT:C221($events; 1)
 			$events{1}:=On Unload:K2:2

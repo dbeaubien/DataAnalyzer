@@ -66,6 +66,7 @@ property tableInfo : Collection
 property blockType : Object
 property numberOfDataSegments : Integer
 property addressTablesOfDataTablesAddress : Text
+property properties : Collection
 
 Class extends Info
 
@@ -111,7 +112,7 @@ Class constructor
 		$blockType.longSwap:=(Character code:C91($resType[[4]]) << 24)+(Character code:C91($resType[[3]]) << 16)+(Character code:C91($resType[[2]]) << 8)+Character code:C91($resType[[1]])
 		$blockType.longNoSwap:=(Character code:C91($resType[[1]]) << 24)+(Character code:C91($resType[[2]]) << 16)+(Character code:C91($resType[[3]]) << 8)+Character code:C91($resType[[4]])
 		$blockType.headerSize:=28+(4*Num:C11($resType="rec1"))
-		$blockType.isListOfBlocks:=$listOfBlocks.indexOf($resType)#-1
+		$blockType.isListOfBlocks:=$listOfBlocks.includes($resType)
 		This:C1470.blockType[$resType]:=$blockType
 	End for each 
 	
@@ -119,6 +120,68 @@ Class constructor
 	This:C1470.tableAddress:={}
 	This:C1470.tableAddress.TDEF:=[]
 	This:C1470.tableAddress.DTab:=[]
+	
+	This:C1470.properties:=[\
+		"useTraditionalStyleSorting"; \
+		"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator"; \
+		"sortHiraganaCodePointsFirstOnQuaternaryLevel"; \
+		"useQuaternaryCollationStrengthForSorting"; \
+		"useSecondaryCollationStrengthForMatching"; \
+		"ignoreWildCharInMiddle"; \
+		"withICU"; \
+		"dialectCode"; \
+		"numberOfDataFlushes"; \
+		"firstHolePositionInAddressTablesTable"; \
+		"addressTablesTableHasHoles"; \
+		"extraPropertiesSize"; \
+		"extraPropertiesTableAddress"; \
+		"extraPropertiesTableHasHoles"; \
+		"indexDefinitionsTableInStructureAddress"; \
+		"firstHolePositionInIndexDefinitionsTableInStructure"; \
+		"indexDefinitionsTableInStructureHasHoles"; \
+		"indexDefinitionsTableAddress"; \
+		"numberOfIndexesDefinedInStructure"; \
+		"firstHolePositionInIndexDefinitionsTable"; \
+		"indexDefinitionsTableHasHoles"; \
+		"numberOfIndexes"; \
+		"sequenceNumbersAddress"; \
+		"firstHolePositionInSequenceNumbersTable"; \
+		"sequenceNumbersTableHasHoles"; \
+		"numberOfSequenceNumbers"; \
+		"relationsTableAddress"; \
+		"firstHolePositionInRelationsTable"; \
+		"relationsTableHasHoles"; \
+		"numberOfRelations"; \
+		"numberOfDataTables"; \
+		"dataTableHeadersAddress"; \
+		"firstHolePositionInAddressTable"; \
+		"addressTableHasHoles"; \
+		"indexStoredInSeparateSegment"; \
+		"dataFileContainsStructure"; \
+		"dataFileNeedsRepair"; \
+		"addressTablesOfDataTablesSize"; \
+		"randomValueForDuplicateIndexDetection"; \
+		"numberOfLogFiles"; \
+		"lastLogAction"; \
+		"numberOfHeaderModifications"; \
+		"randomValueToLinkWithIndexes"; \
+		"segmentHeaderSize"; \
+		"segmentHeaderAddress"; \
+		"addressTablesOfDataTablesAddress"; \
+		"ratio"; \
+		"blockSize"; \
+		"hasSecondaryBlockAllocationAddressTable"; \
+		"primaryBlockAllocationAddressTable"; \
+		"limitSegments"; \
+		"logicalEOF"; \
+		"synchronizationIdentifier"; \
+		"productVersionCode"; \
+		"numberOfDataSegments"; \
+		"lastOperationDescription"; \
+		"lastOperation"; \
+		"dataFileVersion"; \
+		"isDataLittleEndian"\
+		]
 	
 Function open($dataFile : 4D:C1709.File) : cs:C1710.DataInfo
 	
@@ -409,6 +472,17 @@ Function readTable($tableAddress : Real; $tag : Text) : cs:C1710.DataInfo
 	
 	return This:C1470
 	
+Function getFileInfo() : Object
+	
+	$fileInfo:={}
+	
+	var $property : Text
+	For each ($property; This:C1470.properties)
+		$fileInfo[$property]:=This:C1470[$property]
+	End for each 
+	
+	return $fileInfo
+	
 Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object) : Object
 	
 	$didUpdateForm:=False:C215
@@ -423,7 +497,13 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 		$byteSwap:=Bool:C1537(This:C1470.isDataLittleEndian)
 		$blockSize:=This:C1470.blockSize
 		
-		$interval:=$ctx.updateInterval
+		var $interval : Real
+		var $isGUI : Boolean
+		
+		If ($ctx#Null:C1517)
+			$isGUI:=True:C214
+			$interval:=$ctx.updateInterval
+		End if 
 		
 		$level:=0
 		$type:=This:C1470.blockType.Taba
@@ -553,22 +633,33 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 				If (($ms-$time)>$interval)
 					$time:=$ms
 					$didUpdateForm:=True:C214
-					CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+					If ($isGUI)
+						CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+					End if 
 				End if 
 			End for 
 		End if 
 	End if 
 	
 	If (Not:C34($didUpdateForm))
-		CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+		If ($isGUI)
+			CALL FORM:C1391($ctx.window; $ctx.onTableStats; $tableStats)
+		End if 
 	End if 
 	
 	return $tableStats
 	
 Function gotTableStats($tableStats : Object; $ctx : Object)
 	
+	If ($ctx#Null:C1517)
+		$isGUI:=True:C214
+	End if 
+	
 	$tableStats.complete:=True:C214
-	CALL FORM:C1391($ctx.window; $ctx.onFinish; $tableStats; $ctx)
+	
+	If ($isGUI)
+		CALL FORM:C1391($ctx.window; $ctx.onFinish; $tableStats; $ctx)
+	End if 
 	
 Function readTableInfo($tableAddress : Object) : Object
 	
