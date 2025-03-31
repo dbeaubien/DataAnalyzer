@@ -1,3 +1,10 @@
+property ASCII : Object
+property COLOR : Object
+property STYLE : Object
+property RESET : Text
+property BACKGROUND : Integer
+property CURSOR : Object
+
 Class constructor
 	
 	This:C1470.ASCII:=New object:C1471
@@ -31,6 +38,34 @@ Class constructor
 	This:C1470.CURSOR.RIGHT:="C"
 	This:C1470.CURSOR.LEFT:="D"
 	
+Function COL($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"G")
+	
+Function UP($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"A")
+	
+Function UP1($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"F")
+	
+Function DOWN($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"B")
+	
+Function DOWN1($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"E")
+	
+Function FORWARD($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"C")
+	
+Function BACKWARD($lines : Integer)->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"["+String:C10($lines)+"D")
+	
 Function CR()->$this : cs:C1710.CLI
 	
 	$this:=This:C1470.print(This:C1470.ASCII.CR)
@@ -41,11 +76,27 @@ Function LF()->$this : cs:C1710.CLI
 	
 Function EL()->$this : cs:C1710.CLI
 	
-	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[K")
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[K")  //erase line from cursor
+	
+Function EL1()->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[1K")  //erase line to cursor
+	
+Function EL2()->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[2K")  //erase entire line
 	
 Function ES()->$this : cs:C1710.CLI
 	
-	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[2J")
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[2J")  //erase entire screen
+	
+Function ES1()->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[1J")  //erase screen to cursor
+	
+Function ES2()->$this : cs:C1710.CLI
+	
+	$this:=This:C1470.print(This:C1470.ASCII.ESC+"[J")  //erase screen from cursor
 	
 Function XY($x : Integer; $y : Integer)->$this : cs:C1710.CLI
 	

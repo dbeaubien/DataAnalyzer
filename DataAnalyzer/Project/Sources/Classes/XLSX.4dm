@@ -44,6 +44,8 @@ Function write($file : 4D:C1709.File) : Object
 		var $source : Object
 		$source:=New object:C1471("files"; This:C1470._workFolder.files().combine(This:C1470._workFolder.folders()))
 		
+		$file.parent.create()
+		
 		return ZIP Create archive:C1640($source; $file)
 		
 	End if 

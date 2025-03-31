@@ -101,19 +101,19 @@ Function show($file : 4D:C1709.File)
 	
 	//MARK:-Form Object States
 	
-Function toggleSelectDataFile() : cs:C1710.DataInfoController
+Function toggleSelectDataFile() : cs:C1710.DataAnalyzerForm
 	
 	OBJECT SET ENABLED:C1123(*; "open"; Not:C34(This:C1470.isRunning))
 	
 	return This:C1470
 	
-Function toggleParallelProcessing() : cs:C1710.DataInfoController
+Function toggleParallelProcessing() : cs:C1710.DataAnalyzerForm
 	
 	OBJECT SET ENABLED:C1123(*; "useMultipleCores"; This:C1470.countCores>1)
 	
 	return This:C1470
 	
-Function toggleExportButton() : cs:C1710.DataInfoController
+Function toggleExportButton() : cs:C1710.DataAnalyzerForm
 	
 	If (This:C1470.isRunning) || (OB Is empty:C1297(This:C1470.JSON))
 		OBJECT SET ENABLED:C1123(*; "exportJ"; False:C215)
@@ -125,7 +125,7 @@ Function toggleExportButton() : cs:C1710.DataInfoController
 	
 	return This:C1470
 	
-Function toggleTableNames() : cs:C1710.DataInfoController
+Function toggleTableNames() : cs:C1710.DataAnalyzerForm
 	
 	If (This:C1470.hideTableNames)
 		OBJECT SET VISIBLE:C603(*; "tableName"; False:C215)
@@ -155,7 +155,7 @@ Function _dropItemToFile() : 4D:C1709.File
 		$file:=$file.original
 	End if 
 	
-	If ([".4DD"; ".data"].indexOf($file.extension)=-1)
+	If (Not:C34([".4DD"; ".data"].includes($file.extension)))
 		return 
 	End if 
 	
@@ -222,7 +222,7 @@ Function onUnload()
 	
 	//MARK:-
 	
-Function start() : cs:C1710.DataInfoController
+Function start() : cs:C1710.DataAnalyzerForm
 	
 	This:C1470.startTime:=Milliseconds:C459
 	
@@ -231,13 +231,13 @@ Function start() : cs:C1710.DataInfoController
 	
 	return This:C1470
 	
-Function updateDuration() : cs:C1710.DataInfoController
+Function updateDuration() : cs:C1710.DataAnalyzerForm
 	
 	This:C1470.duration:=[String:C10(Abs:C99(Milliseconds:C459-This:C1470.startTime)/1000; "#,###,###,###,##0.0"); "s"].join(" ")
 	
 	return This:C1470
 	
-Function stop() : cs:C1710.DataInfoController
+Function stop() : cs:C1710.DataAnalyzerForm
 	
 	This:C1470.isRunning:=False:C215
 	This:C1470.toggleSelectDataFile()
@@ -300,72 +300,8 @@ Function _open($ctx : Object)
 	$dataInfo.open($ctx.file)
 	$dataInfo.readFileInfo()
 	
-	$fileInfo:={}
-	$properties:=[\
-		"useTraditionalStyleSorting"; \
-		"useLanguageNeutralDeadcharAlgorithmInsteadOfBreakIterator"; \
-		"sortHiraganaCodePointsFirstOnQuaternaryLevel"; \
-		"useQuaternaryCollationStrengthForSorting"; \
-		"useSecondaryCollationStrengthForMatching"; \
-		"ignoreWildCharInMiddle"; \
-		"withICU"; \
-		"dialectCode"; \
-		"numberOfDataFlushes"; \
-		"firstHolePositionInAddressTablesTable"; \
-		"addressTablesTableHasHoles"; \
-		"extraPropertiesSize"; \
-		"extraPropertiesTableAddress"; \
-		"extraPropertiesTableHasHoles"; \
-		"indexDefinitionsTableInStructureAddress"; \
-		"firstHolePositionInIndexDefinitionsTableInStructure"; \
-		"indexDefinitionsTableInStructureHasHoles"; \
-		"indexDefinitionsTableAddress"; \
-		"numberOfIndexesDefinedInStructure"; \
-		"firstHolePositionInIndexDefinitionsTable"; \
-		"indexDefinitionsTableHasHoles"; \
-		"numberOfIndexes"; \
-		"sequenceNumbersAddress"; \
-		"firstHolePositionInSequenceNumbersTable"; \
-		"sequenceNumbersTableHasHoles"; \
-		"numberOfSequenceNumbers"; \
-		"relationsTableAddress"; \
-		"firstHolePositionInRelationsTable"; \
-		"relationsTableHasHoles"; \
-		"numberOfRelations"; \
-		"numberOfDataTables"; \
-		"dataTableHeadersAddress"; \
-		"firstHolePositionInAddressTable"; \
-		"addressTableHasHoles"; \
-		"indexStoredInSeparateSegment"; \
-		"dataFileContainsStructure"; \
-		"dataFileNeedsRepair"; \
-		"addressTablesOfDataTablesSize"; \
-		"randomValueForDuplicateIndexDetection"; \
-		"numberOfLogFiles"; \
-		"lastLogAction"; \
-		"numberOfHeaderModifications"; \
-		"randomValueToLinkWithIndexes"; \
-		"segmentHeaderSize"; \
-		"segmentHeaderAddress"; \
-		"addressTablesOfDataTablesAddress"; \
-		"ratio"; \
-		"blockSize"; \
-		"hasSecondaryBlockAllocationAddressTable"; \
-		"primaryBlockAllocationAddressTable"; \
-		"limitSegments"; \
-		"logicalEOF"; \
-		"synchronizationIdentifier"; \
-		"productVersionCode"; \
-		"numberOfDataSegments"; \
-		"lastOperationDescription"; \
-		"lastOperation"; \
-		"dataFileVersion"; \
-		"isDataLittleEndian"\
-		]
-	
-	For each ($property; $properties)
-		$fileInfo[$property]:=$dataInfo[$property]
-	End for each 
+	var $fileInfo : Object
+	$fileInfo:=$dataInfo.getFileInfo()
 	
 	CALL FORM:C1391($ctx.window; $ctx.onFileInfo; $fileInfo)
 	
@@ -387,7 +323,9 @@ Function _open($ctx : Object)
 	
 	$dataInfo.tableInfo:=$dataInfo.tableInfo.orderBy("nbRecords asc")
 	
-	$ctx.tableInfo:=$dataInfo.tableInfo.copy(ck shared:K85:29)
+	If ($ctx.useMultipleCores)
+		$ctx.tableInfo:=$dataInfo.tableInfo.copy(ck shared:K85:29)
+	End if 
 	
 	var $tableStats : cs:C1710._TableStats
 	
@@ -438,8 +376,13 @@ Function _onTableStats($tableStats : Object)
 	Form:C1466.updateDuration()
 	
 	var $table : Object
+	var $this : Object
+	var $col : Collection
 	
-	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableStats.tableUUID).first()
+	$this:=Form:C1466
+	$col:=$this.tableInfo.col
+	
+	$table:=$col.query("tableUUID === :1"; $tableStats.tableUUID).first()
 	
 	If ($table#Null:C1517)
 		$table.sizeOf_rec1:=$tableStats.sizeOf_rec1
@@ -452,7 +395,7 @@ Function _onTableStats($tableStats : Object)
 		$table.minOf_blob:=$tableStats.minOf_blob
 		$table.avgOf_rec1:=$tableStats.avgOf_rec1
 		$table.avgOf_blob:=$tableStats.avgOf_blob
-		Form:C1466.tableInfo.col:=Form:C1466.tableInfo.col
+		Form:C1466.tableInfo.col:=$col
 	End if 
 	
 Function _onFileInfo($fileInfo : Object)
@@ -466,10 +409,15 @@ Function _onTableInfo($tableInfo : Object)
 	Form:C1466.updateDuration()
 	
 	var $table : Object
+	var $this : Object
+	var $col : Collection
 	
-	$table:=Form:C1466.tableInfo.col.query("tableUUID === :1"; $tableInfo.tableUUID).first()
+	$this:=Form:C1466
+	$col:=$this.tableInfo.col
+	
+	$table:=$col.query("tableUUID === :1"; $tableInfo.tableUUID).first()
 	If ($table=Null:C1517)
-		Form:C1466.tableInfo.col.push($tableInfo)
+		$col.push($tableInfo)
 	Else 
 		var $attr : Text
 		For each ($attr; $tableInfo)
@@ -482,12 +430,12 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 	Form:C1466.updateDuration()
 	
 	var $table : Object
-	var $this; $tableInfo : Object
+	var $this : Object
 	var $col : Collection
 	
 	$this:=Form:C1466
-	$tableInfo:=$this.tableInfo
-	$col:=$tableInfo.col
+	$col:=$this.tableInfo.col
+	
 	$table:=$col.query("tableUUID === :1"; $tableStats.tableUUID).first()
 	
 	If ($table#Null:C1517)

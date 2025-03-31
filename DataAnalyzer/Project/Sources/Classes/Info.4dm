@@ -208,7 +208,7 @@ Function isDataFile($dataFile : 4D:C1709.File) : Boolean
 	If (OB Instance of:C1731($dataFile; 4D:C1709.File)) && ($dataFile.exists)
 		var $extenions : Collection
 		$extenions:=[".4dd"; ".data"]
-		If ($extenions.indexOf($dataFile.extension)#-1)
+		If ($extenions.includes($dataFile.extension))
 			return True:C214
 		End if 
 	End if 

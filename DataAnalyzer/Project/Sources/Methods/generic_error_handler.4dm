@@ -57,7 +57,7 @@ For each ($link; $chain)
 End for each 
 
 $CLI\
-.print("***"+Parse formula:C1576(":C1015")+"***"; "bold")\
+.print("***"+Parse formula:C1576(":C1799")+"***"; "bold")\
 .LF()
 
 var $error : Object
