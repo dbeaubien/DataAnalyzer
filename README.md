@@ -52,7 +52,7 @@ tool4d.app/Contents/MacOS/tool4d
  --startup-method=run
 ```
 
-* `--user-param`: pass comma-separated paths of data, xlsx output, json output. the path format of the data file (POSIX or platform) is assumed for the outfiles.
+* `--user-param`: pass comma-separated paths of data, xlsx output, json output. the same path format as the data file (POSIX or platform) is assumed for the output files.
 * `--startup-method`: always `run`
 
 <img src="https://github.com/user-attachments/assets/8272140b-7da9-437c-ab93-d077af2f9408" width=400 height=auto />
