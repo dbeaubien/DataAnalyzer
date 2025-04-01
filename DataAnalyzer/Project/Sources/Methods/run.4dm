@@ -16,7 +16,7 @@ https://developer.4d.com/docs/Admin/cli/#tool4d
 	
 	$CLI.logo().version()
 	
-	//ON ERR CALL(Formula(generic_error_handler).source)
+	ON ERR CALL:C155(Formula:C1597(generic_error_handler).source)
 	
 	$CLI.LF()
 	

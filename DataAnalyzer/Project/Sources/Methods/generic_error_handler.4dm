@@ -1,4 +1,4 @@
-//%attributes = {"invisible":true}
+//%attributes = {"invisible":true,"preemptive":"capable"}
 var $CLI : cs:C1710.CLI
 
 $CLI:=cs:C1710.CLI.new()
