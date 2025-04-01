@@ -1,14 +1,19 @@
 Class constructor
 	
-Function test($obj : Object) : Object
+Function d3sunburst($obj : Object) : Object
 	
 	$root:={name: "file"; children: []}
 	$format:="#,###,###,###,###,##0"
 	
+	$records:=Localized string:C991("records")
+	$blob:=Localized string:C991("blob")
+	$text:=Localized string:C991("text")
+	$table:=Localized string:C991("Table_")
+	
 	For each ($data; $obj.data)
 		
 		If ($data.tableName=Null:C1517)
-			$data.tableName:=Localized string:C991("Table_")+String:C10($data.tableNumber)
+			$data.tableName:=$table+String:C10($data.tableNumber)
 		End if 
 		
 		If ($data.records.size=Null:C1517) && ($data.blobs.size=Null:C1517)
@@ -43,15 +48,15 @@ Function test($obj : Object) : Object
 			$table.children.push({name: $totalSize; children: $children; cid: $cid})
 			
 			If ($data.records.size#Null:C1517)
-				$children.push({name: "records"; value: $data.records.size})
+				$children.push({name: $records; value: $data.records.size})
 			End if 
 			If ($data.blobs.size#Null:C1517)
 				$other:=$data.blobs.size
 				If ($data.texts.size#Null:C1517)
 					$other-=$data.texts.size
-					$children.push({name: "text"; value: $data.texts.size})
+					$children.push({name: $text; value: $data.texts.size})
 				End if 
-				$children.push({name: "blob"; value: $other})
+				$children.push({name: $blob; value: $other})
 			End if 
 		End if 
 		

@@ -282,6 +282,18 @@
           <source>Use Traditional Style Sorting</source>
           <target>Use Traditional Style Sorting</target>
         </trans-unit>
+        <trans-unit resname="records">
+          <source>records</source>
+          <target>records</target>
+        </trans-unit>
+        <trans-unit resname="blob">
+          <source>blob</source>
+          <target>blob</target>
+        </trans-unit>
+        <trans-unit resname="text">
+          <source>text</source>
+          <target>text</target>
+        </trans-unit>
         <trans-unit resname="">
           <source></source>
           <target></target>

@@ -11,7 +11,7 @@ Else
 	
 	$form.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	
-	$window:=Open form window:C675("TEST")
-	DIALOG:C40("TEST"; $form; *)
+	$window:=Open form window:C675("DataAnalyzer")
+	DIALOG:C40("DataAnalyzer"; $form; *)
 	
 End if 

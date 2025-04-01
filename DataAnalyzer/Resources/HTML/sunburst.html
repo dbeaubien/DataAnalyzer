@@ -20,12 +20,13 @@
             function drill(cid) {
                 d3.select("#"+cid).dispatch("click");
             }
-            function chart(_data, _width) {
+            function chart(_data, _width, _window) {
                 const data = _data;
                 // Specify the chart’s dimensions.
                 const width = _width;
                 const height = width;
                 const radius = width / 6;
+                const window = _window;
                 // Create the color scale.
                 const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
                 // Compute the layout.
@@ -45,13 +46,14 @@
                 .innerRadius(d => d.y0 * radius)
                 .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
                 // Create the SVG container.
-                
-                const svg = d3.select("body")
+                const body = d3.select('body');
+                const svg = body
                 .append("svg")
                 .attr("width", width)
                 .attr("height", width)
                 .attr("viewBox", [-width / 2, -height / 2, width, width])
-                .style("font", "10px sans-serif");
+                .style("font", "10px sans-serif")
+                .style("opacity", 0);
                 // Append the arcs.
                 const path = svg.append("g")
                 .selectAll("path")
@@ -89,7 +91,87 @@
                 .attr("fill", "none")
                 .attr("pointer-events", "all")
                 .on("click", clicked).attr("id", "root");
-                                
+                
+                svg.transition().duration(200)
+                       .style('opacity', 1)
+                
+                
+                const overlay = body.append('div')
+                                      .attr('class', 'overlay')
+                                      .attr('id', 'overlay')
+                                      .style('position', 'fixed')
+                                      .style('top', 0)
+                                      .style('left', 0)
+                                      .style('width', '100%')
+                                      .style('height', '100%')
+                                      .style('background', 'black')
+                                      .style('opacity', 0)
+                                      .style('display', 'none');
+                                      
+                const drop_mask = body.append('div')
+                                        .attr('class', 'drop_mask')
+                                        .attr('id', 'drop_mask')
+                                        .style('position', 'fixed')
+                                        .style('top', 0)
+                                        .style('left', 0)
+                                        .style('width', '100%')
+                                        .style('height', '100%')
+                                        .style('opacity', 0)
+                                        .style('display', 'none')
+                                        .style('z-index', 9999);
+                                        
+                body.on('dragover', onDragOver);
+                drop_mask.on('dragleave', onDragLeave)
+                .on('drop', onDrop);
+                
+                function onDragOver(event) {
+                    drop_mask.style('display', 'block');
+                    overlay.style('display', 'block')
+                    /*
+                    .transition().duration(200)
+                    .style('opacity', 0.8);
+                     */
+                    event.preventDefault();
+                };
+
+                function onDragLeave(event) {
+                    drop_mask.style('display', 'none');
+                    /*
+                    overlay.transition().duration(200)
+                           .style('opacity', 0)
+                           .transition().duration(0)
+                           .style('display', 'none');
+                     */
+                    event.preventDefault();
+                };
+                
+                function onDrop(event) {
+                        var files = event.dataTransfer.files;
+                        if (files.length > 0) {
+                            var file  = files[0];
+
+                            if (!file.type.match('application/json')) {
+                                return;
+                            }
+
+                            var reader = new FileReader();
+                            reader.onload = () => {
+                                $4d.dropped(window, file.name, reader.result);
+                            };
+//                            reader.readAsDataURL(file);
+                            reader.readAsText(file);
+                        }
+
+                        drop_mask.style('display', 'none');
+                        overlay.transition().duration(200)
+                               .style('opacity', 0)
+                               .transition().duration(0)
+                               .style('display', 'none');
+                        event.preventDefault();
+                    };
+                
+                
+                
                 function arcVisible(d) {
                     return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
                 }

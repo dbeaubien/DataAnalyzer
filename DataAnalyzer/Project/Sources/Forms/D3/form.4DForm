@@ -12,7 +12,8 @@
 	"rightMargin": 20,
 	"bottomMargin": 20,
 	"events": [
-		"onLoad"
+		"onLoad",
+		"onUnload"
 	],
 	"windowTitle": "",
 	"destination": "detailScreen",
@@ -25,22 +26,21 @@
 					"top": 20,
 					"width": 700,
 					"height": 700,
-					"contextMenu": "automatic",
+					"contextMenu": "none",
 					"borderStyle": "none",
 					"sizingX": "grow",
 					"sizingY": "grow",
 					"method": "ObjectMethods/d3.4dm",
 					"events": [
-						"onLoad",
 						"onEndURLLoading"
 					],
 					"webEngine": "embedded",
-					"methodsAccessibility": "none"
+					"methodsAccessibility": "all"
 				},
 				"Static Picture1": {
 					"type": "picture",
 					"top": 20,
-					"left": 996,
+					"left": 991,
 					"width": 50,
 					"height": 50,
 					"picture": "Images/d3.svg",
@@ -89,7 +89,7 @@
 			}
 		}
 	],
-	"geometryStamp": 171,
+	"geometryStamp": 177,
 	"method": "method.4dm",
 	"editor": {
 		"activeView": "View 1",
