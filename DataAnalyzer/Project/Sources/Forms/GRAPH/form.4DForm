@@ -36,14 +36,60 @@
 					],
 					"webEngine": "embedded",
 					"methodsAccessibility": "none"
+				},
+				"Static Picture1": {
+					"type": "picture",
+					"top": 20,
+					"left": 996,
+					"width": 50,
+					"height": 50,
+					"picture": "Images/d3.svg",
+					"pictureFormat": "scaled"
 				}
 			}
 		},
 		{
-			"objects": {}
+			"objects": {
+				"Button": {
+					"type": "button",
+					"text": "Button",
+					"top": 191,
+					"left": 832,
+					"width": 116,
+					"height": 64,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/Button.4dm"
+				},
+				"Button1": {
+					"type": "button",
+					"text": "Button",
+					"top": 295,
+					"left": 832,
+					"width": 116,
+					"height": 64,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/Button1.4dm"
+				},
+				"Button2": {
+					"type": "button",
+					"text": "Button",
+					"top": 399,
+					"left": 832,
+					"width": 116,
+					"height": 64,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/Button2.4dm"
+				}
+			}
 		}
 	],
-	"geometryStamp": 159,
+	"geometryStamp": 171,
 	"method": "method.4dm",
 	"editor": {
 		"activeView": "View 1",

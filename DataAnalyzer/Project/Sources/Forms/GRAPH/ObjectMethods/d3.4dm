@@ -13,7 +13,13 @@ Case of
 		
 	: ($event.code=On End URL Loading:K2:47)
 		
-		$data:=JSON Parse:C1218(Folder:C1567(fk desktop folder:K87:19).file("flare-2.json").getText())
+		//$data:=JSON Parse(Folder(fk desktop folder).file("flare-2.json").getText())
+		
+		$data:=JSON Parse:C1218(Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json").getText())
+		
+		$f:=cs:C1710._JSONFormatter.new()
+		
+		$data:=$f.test($data)
 		
 		var $l; $t; $r; $b : Integer
 		OBJECT GET COORDINATES:C663(*; OBJECT Get name:C1087; $l; $t; $r; $b)

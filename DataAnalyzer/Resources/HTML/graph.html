@@ -17,6 +17,9 @@
     </head>
     <body>
         <script>
+            function drill(cid) {
+                d3.select("#"+cid).dispatch("click");
+            }
             function chart(_data, _width) {
                 const data = _data;
                 // Specify the chart’s dimensions.
@@ -62,7 +65,7 @@
                 // Make them clickable if they have children.
                 path.filter(d => d.children)
                 .style("cursor", "pointer")
-                .on("click", clicked);
+                .on("click", clicked).attr("id", d => d.data.cid);
                 
                 const format = d3.format(",d");
                 path.append("title")
@@ -85,7 +88,7 @@
                 .attr("r", radius)
                 .attr("fill", "none")
                 .attr("pointer-events", "all")
-                .on("click", clicked);
+                .on("click", clicked).attr("id", "root");
                                 
                 function arcVisible(d) {
                     return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;

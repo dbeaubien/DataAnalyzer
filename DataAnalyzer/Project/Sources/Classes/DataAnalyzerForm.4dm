@@ -395,6 +395,8 @@ Function _onTableStats($tableStats : Object)
 		$table.minOf_blob:=$tableStats.minOf_blob
 		$table.avgOf_rec1:=$tableStats.avgOf_rec1
 		$table.avgOf_blob:=$tableStats.avgOf_blob
+		$table.sizeOf_blbT:=$tableStats.sizeOf_blbT
+		
 		Form:C1466.tableInfo.col:=$col
 	End if 
 	
@@ -446,9 +448,11 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 		
 		$this.stop()
 		
+		$tableName:=This:C1470.hideTableNames ? "genericTableName" : "tableName"
+		
 		$this.JSON.data:=$col.extract(\
 			"tableNumber"; "tableNumber"; \
-			"tableName"; "tableName"; \
+			$tableName; "tableName"; \
 			"tableUUID"; "tableUUID"; \
 			"nbRecords"; "records.number"; \
 			"countOf_rec1"; "records.count"; \
@@ -459,6 +463,7 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 			"nbBlobs"; "blobs.number"; \
 			"countOf_blob"; "blobs.count"; \
 			"sizeOf_blob"; "blobs.size"; \
+			"sizeOf_blbT"; "texts.size"; \
 			"maxOf_blob"; "blobs.max"; \
 			"minOf_blob"; "blobs.min"; \
 			"avgOf_blob"; "blobs.average")
