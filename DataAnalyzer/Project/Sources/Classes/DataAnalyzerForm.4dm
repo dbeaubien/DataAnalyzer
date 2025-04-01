@@ -17,6 +17,7 @@ Class constructor
 	This:C1470.hideTableNames:=True:C214
 	This:C1470.JSON:={}
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
+	This:C1470.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
 	
 	This:C1470.toggleParallelProcessing()
 	

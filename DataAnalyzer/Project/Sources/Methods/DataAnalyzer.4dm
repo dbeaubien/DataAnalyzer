@@ -8,9 +8,6 @@ If ($params=Null:C1517)
 Else 
 	
 	$form:=cs:C1710.DataAnalyzerForm.new()
-	
-	$form.tableInfo:={col: []; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
-	
 	$window:=Open form window:C675("DataAnalyzer")
 	DIALOG:C40("DataAnalyzer"; $form; *)
 	
