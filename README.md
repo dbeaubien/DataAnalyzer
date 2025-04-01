@@ -59,4 +59,14 @@ tool4d.app/Contents/MacOS/tool4d
 
 <img src="https://github.com/user-attachments/assets/582344bf-58bc-465f-b78b-ebac7a5ee765" width=400 height=auto />
 
+## Graph
+
+visualise size by table:
+
+<img src="https://github.com/user-attachments/assets/598e1a33-3ebc-4a30-9236-544e6ce87d5d" width=400 height=auto />
+
+blob includes objects and pictures stored in data file (i.e. not in record).
+
+<img src="https://github.com/user-attachments/assets/a5f9b437-5583-4358-8e99-891d381310e7" width=400 height=auto />
+
 
