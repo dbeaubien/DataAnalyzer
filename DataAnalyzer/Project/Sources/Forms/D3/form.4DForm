@@ -37,17 +37,6 @@
 					"webEngine": "embedded",
 					"methodsAccessibility": "all"
 				},
-				"Static Picture1": {
-					"type": "picture",
-					"top": 470,
-					"left": 470,
-					"width": 50,
-					"height": 50,
-					"picture": "Images/d3.svg",
-					"pictureFormat": "scaled",
-					"sizingX": "move",
-					"sizingY": "move"
-				},
 				"tables": {
 					"type": "listbox",
 					"left": 540,
@@ -110,7 +99,7 @@
 			"objects": {}
 		}
 	],
-	"geometryStamp": 213,
+	"geometryStamp": 214,
 	"method": "method.4dm",
 	"editor": {
 		"activeView": "View 1",
