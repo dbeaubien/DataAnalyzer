@@ -444,7 +444,7 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 	
 	If ($col.query("complete === :1"; True:C214).length=$col.length)
 		
-		$this.stop().toggleExportButton()
+		$this.stop()
 		
 		$this.JSON.data:=$col.extract(\
 			"tableNumber"; "tableNumber"; \
@@ -464,6 +464,8 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 			"avgOf_blob"; "blobs.average")
 		
 		$this.JSON.info:=$this.fileInfo
+		
+		$this.toggleExportButton()
 		
 		For each ($workerName; $ctx.workerNames)
 			KILL WORKER:C1390($workerName)
