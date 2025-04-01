@@ -7,7 +7,7 @@ If ($params=Null:C1517)
 	
 Else 
 	
-	$form:=cs:C1710.D3Form.new("sunburst")
+	$form:=cs:C1710.D3Form.new("sunburst"; $params)
 	
 	$window:=Open form window:C675("D3")
 	DIALOG:C40("D3"; $form; *)

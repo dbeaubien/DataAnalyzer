@@ -16,10 +16,7 @@ Case of
 			
 		End if 
 		
-		$data:=JSON Parse:C1218(Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json").getText())
-		$data:={data: []}
-		
-		Form:C1466.onLoad().bind("d3").open($data)
+		Form:C1466.onLoad().bind("d3").open(Form:C1466.data)
 		
 	: ($event.code=On Unload:K2:2)
 		

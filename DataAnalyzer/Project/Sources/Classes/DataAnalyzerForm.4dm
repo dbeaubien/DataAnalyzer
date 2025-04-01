@@ -116,9 +116,11 @@ Function toggleParallelProcessing() : cs:C1710.DataAnalyzerForm
 Function toggleExportButton() : cs:C1710.DataAnalyzerForm
 	
 	If (This:C1470.isRunning) || (OB Is empty:C1297(This:C1470.JSON))
+		OBJECT SET ENABLED:C1123(*; "exportG"; False:C215)
 		OBJECT SET ENABLED:C1123(*; "exportJ"; False:C215)
 		OBJECT SET ENABLED:C1123(*; "exportX"; False:C215)
 	Else 
+		OBJECT SET ENABLED:C1123(*; "exportG"; True:C214)
 		OBJECT SET ENABLED:C1123(*; "exportJ"; True:C214)
 		OBJECT SET ENABLED:C1123(*; "exportX"; This:C1470.JSON.data.length#0)
 	End if 
@@ -448,7 +450,7 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 		
 		$this.stop()
 		
-		$tableName:=This:C1470.hideTableNames ? "genericTableName" : "tableName"
+		$tableName:=Form:C1466.hideTableNames ? "genericTableName" : "tableName"
 		
 		$this.JSON.data:=$col.extract(\
 			"tableNumber"; "tableNumber"; \

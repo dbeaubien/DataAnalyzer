@@ -86,6 +86,10 @@
           <source>Export XLSX…</source>
           <target>Export XLSX…</target>
         </trans-unit>
+        <trans-unit resname="Graph…">
+          <source>Graph…</source>
+          <target>Graph…</target>
+        </trans-unit>
         <trans-unit resname="Size Blobs">
           <source>Size Blobs</source>
           <target>Size Blobs</target>

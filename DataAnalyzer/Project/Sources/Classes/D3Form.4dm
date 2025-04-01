@@ -4,13 +4,16 @@ property WA : Text
 property formatter : cs:C1710._JSONFormatter
 property window : Integer
 property data : Object
+property tables : Object
 
-Class constructor($name : Text)
+Class constructor($name : Text; $data : Object)
 	
 	If ($name#"")
 		This:C1470.name:=$name
 		This:C1470.html:=File:C1566(File:C1566("/RESOURCES/HTML/"+$name+".html").platformPath; fk platform path:K87:2)
 	End if 
+	
+	This:C1470.data:=$data
 	
 Function onLoad() : cs:C1710.D3Form
 	
@@ -41,9 +44,40 @@ Function open($data : Object) : cs:C1710.D3Form
 	
 	return This:C1470
 	
+Function drill($item : Object) : cs:C1710.D3Form
+	
+	If ($item#Null:C1517)
+		$cid:=$item.cid
+	Else 
+		$cid:="root"
+	End if 
+	
+	WA EXECUTE JAVASCRIPT FUNCTION:C1043(*; This:C1470.WA; "drill"; *; $cid)
+	
+	return This:C1470
+	
+Function list($data : Object) : cs:C1710.D3Form
+	
+	$col:=[]
+	
+	For each ($datum; $data.children)
+		$col.push({tableName: $datum.name; cid: $datum.cid})
+		For each ($child; $datum.children)
+			If ($child.children#Null:C1517)
+				$col.push({tableName: $child.children.extract("name").join(", "); cid: $child.cid})
+			End if 
+		End for each 
+	End for each 
+	
+	This:C1470.tables:={col: $col; sel: Null:C1517; pos: Null:C1517; item: Null:C1517}
+	
+	return This:C1470
+	
 Function chart($data : Object) : cs:C1710.D3Form
 	
 	$data:=This:C1470.formatter.d3sunburst(This:C1470.data)
+	
+	This:C1470.list($data)
 	
 	var $l; $t; $r; $b; $width; $height; $size : Integer
 	OBJECT GET COORDINATES:C663(*; This:C1470.WA; $l; $t; $r; $b)

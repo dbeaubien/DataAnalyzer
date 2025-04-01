@@ -349,8 +349,8 @@
 					"type": "button",
 					"text": ":xliff:Export JSON…",
 					"top": 30,
-					"left": 794,
-					"width": 176,
+					"left": 914,
+					"width": 116,
 					"height": 22,
 					"events": [
 						"onClick"
@@ -362,8 +362,8 @@
 					"type": "button",
 					"text": ":xliff:Export XLSX…",
 					"top": 30,
-					"left": 974,
-					"width": 176,
+					"left": 1034,
+					"width": 116,
 					"height": 22,
 					"events": [
 						"onClick"
@@ -373,9 +373,9 @@
 				},
 				"Input": {
 					"type": "input",
-					"left": 681,
-					"top": 32,
-					"width": 108,
+					"left": 1095,
+					"top": 5,
+					"width": 68,
 					"height": 17,
 					"dataSource": "Form:C1466.duration",
 					"enterable": false,
@@ -397,6 +397,19 @@
 					"dataSourceTypeHint": "boolean",
 					"dataSource": "Form:C1466.useMultipleCores",
 					"focusable": false
+				},
+				"exportG": {
+					"type": "button",
+					"text": ":xliff:Graph…",
+					"top": 30,
+					"left": 794,
+					"width": 116,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"focusable": false,
+					"method": "ObjectMethods/exportG.4dm"
 				}
 			}
 		},
@@ -1373,7 +1386,7 @@
 			}
 		}
 	],
-	"geometryStamp": 1542,
+	"geometryStamp": 1627,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
