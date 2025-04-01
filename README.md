@@ -29,6 +29,9 @@ based on original work by [Jean-Pierre Ribreau (JPR)](https://kb.4d.com/assetid=
 * use preëmptive process in compiled mode
 * export JSON
 * export XLSX
+* tool4d
+* command line interface
+* graph by d3.js
 
 ## page 1
 
