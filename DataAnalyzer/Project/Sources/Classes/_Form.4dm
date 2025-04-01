@@ -11,6 +11,7 @@ Class constructor
 	If (This:C1470.countCores>3)
 		This:C1470.countCores-=2  //save for UI and system
 	Else 
+		This:C1470.countCores:=1
 	End if 
 	
 	This:C1470.isInterpretedMode:=Not:C34(Is compiled mode:C492)
