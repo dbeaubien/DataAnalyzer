@@ -116,9 +116,11 @@ Function toggleParallelProcessing() : cs:C1710.DataAnalyzerForm
 Function toggleExportButton() : cs:C1710.DataAnalyzerForm
 	
 	If (This:C1470.isRunning) || (OB Is empty:C1297(This:C1470.JSON))
+		OBJECT SET ENABLED:C1123(*; "exportG"; False:C215)
 		OBJECT SET ENABLED:C1123(*; "exportJ"; False:C215)
 		OBJECT SET ENABLED:C1123(*; "exportX"; False:C215)
 	Else 
+		OBJECT SET ENABLED:C1123(*; "exportG"; True:C214)
 		OBJECT SET ENABLED:C1123(*; "exportJ"; True:C214)
 		OBJECT SET ENABLED:C1123(*; "exportX"; This:C1470.JSON.data.length#0)
 	End if 
@@ -395,6 +397,8 @@ Function _onTableStats($tableStats : Object)
 		$table.minOf_blob:=$tableStats.minOf_blob
 		$table.avgOf_rec1:=$tableStats.avgOf_rec1
 		$table.avgOf_blob:=$tableStats.avgOf_blob
+		$table.sizeOf_blbT:=$tableStats.sizeOf_blbT
+		
 		Form:C1466.tableInfo.col:=$col
 	End if 
 	
@@ -444,11 +448,13 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 	
 	If ($col.query("complete === :1"; True:C214).length=$col.length)
 		
-		$this.stop().toggleExportButton()
+		$this.stop()
+		
+		$tableName:=Form:C1466.hideTableNames ? "genericTableName" : "tableName"
 		
 		$this.JSON.data:=$col.extract(\
 			"tableNumber"; "tableNumber"; \
-			"tableName"; "tableName"; \
+			$tableName; "tableName"; \
 			"tableUUID"; "tableUUID"; \
 			"nbRecords"; "records.number"; \
 			"countOf_rec1"; "records.count"; \
@@ -459,11 +465,14 @@ Function _onFinish($tableStats : Object; $ctx : Object)
 			"nbBlobs"; "blobs.number"; \
 			"countOf_blob"; "blobs.count"; \
 			"sizeOf_blob"; "blobs.size"; \
+			"sizeOf_blbT"; "texts.size"; \
 			"maxOf_blob"; "blobs.max"; \
 			"minOf_blob"; "blobs.min"; \
 			"avgOf_blob"; "blobs.average")
 		
 		$this.JSON.info:=$this.fileInfo
+		
+		$this.toggleExportButton()
 		
 		For each ($workerName; $ctx.workerNames)
 			KILL WORKER:C1390($workerName)

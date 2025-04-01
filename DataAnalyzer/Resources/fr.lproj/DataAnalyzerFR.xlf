@@ -86,6 +86,10 @@
           <source>Export XLSX…</source>
           <target>Export XLSX…</target>
         </trans-unit>
+        <trans-unit resname="Graph…">
+          <source>Graph…</source>
+          <target>Graph…</target>
+        </trans-unit>
         <trans-unit resname="Size Blobs">
           <source>Size Blobs</source>
           <target>Size Blobs</target>
@@ -281,6 +285,18 @@
         <trans-unit resname="useTraditionalStyleSorting">
           <source>Use Traditional Style Sorting</source>
           <target>Use Traditional Style Sorting</target>
+        </trans-unit>
+        <trans-unit resname="records">
+          <source>records</source>
+          <target>records</target>
+        </trans-unit>
+        <trans-unit resname="blob">
+          <source>blob</source>
+          <target>blob</target>
+        </trans-unit>
+        <trans-unit resname="text">
+          <source>text</source>
+          <target>text</target>
         </trans-unit>
         <trans-unit resname="">
           <source></source>
