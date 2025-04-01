@@ -1,36 +1,22 @@
-property countCores : Integer
-property useMultipleCores : Boolean
 property hideTableNames : Boolean
-property isRunning : Boolean
 property JSON : Object
 property exportFileJson : 4D:C1709.File
-property dispatchInterval : Integer
 property updateInterval : Real
-property updateIntervalUnit : Integer
 property startTime : Integer
 property duration : Text
 property tableInfo : Object
 property objectName : Text
 property objectNamePP : Text
-property isInterpretedMode : Boolean
+
+Class extends _Form
 
 Class constructor
 	
-	This:C1470.countCores:=System info:C1571.cores
-	If (This:C1470.countCores>3)
-		This:C1470.countCores-=2  //save for UI and system
-	Else 
-		This:C1470.countCores:=1
-	End if 
-	This:C1470.isInterpretedMode:=Not:C34(Is compiled mode:C492)
+	Super:C1705()
+	
 	This:C1470.hideTableNames:=True:C214
-	This:C1470.isRunning:=False:C215
 	This:C1470.JSON:={}
 	This:C1470.exportFileJson:=Folder:C1567(fk desktop folder:K87:19).file("DataAnalyzer.json")
-	This:C1470.dispatchInterval:=This:C1470.isInterpretedMode ? 12 : 6  //every 0.1 seconds
-	This:C1470.updateIntervalUnit:=This:C1470.isInterpretedMode ? 200 : 100  //every 0.1 seconds
-	
-	This:C1470.useMultipleCores:=False:C215
 	
 	This:C1470.toggleParallelProcessing()
 	
@@ -90,14 +76,6 @@ Function toXlsx() : 4D:C1709.File
 	$status:=$XLSX.write($file)
 	
 	return $file
-	
-Function launch($file : 4D:C1709.File)
-	
-	OPEN URL:C673($file.platformPath)
-	
-Function show($file : 4D:C1709.File)
-	
-	SHOW ON DISK:C922($file.platformPath)
 	
 	//MARK:-Form Object States
 	
