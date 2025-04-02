@@ -5,8 +5,6 @@ property updateInterval : Real
 property startTime : Integer
 property duration : Text
 property tableInfo : Object
-property objectName : Text
-property objectNamePP : Text
 
 Class extends _Form
 
