@@ -2,7 +2,8 @@
   "name": "DataAnalyzer",
   "description": "DataAnalyzer",
   "author": [
-    "Keisuke Miyako <keisuke.miyako@4D.com>"
+    "Keisuke Miyako <keisuke.miyako@4D.com>",
+    "Jean-Pierre Ribreau <jpr@ribreau.net>"
   ],
   "license": "MIT",
   "repository": "https://github.com/miyako/DataAnalyzer",

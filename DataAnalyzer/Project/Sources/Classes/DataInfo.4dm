@@ -630,7 +630,7 @@ Function getTableStats($tableAddress : Real; $tableStats : Object; $ctx : Object
 					End if 
 				End if 
 				$ms:=Milliseconds:C459
-				If (($ms-$time)>$interval)
+				If (Abs:C99($ms-$time)>$interval)
 					$time:=$ms
 					$didUpdateForm:=True:C214
 					If ($isGUI)
