@@ -243,7 +243,6 @@ Function open($dataFile : 4D:C1709.File)
 	$ctx.useMultipleCores:=This:C1470.useMultipleCores
 	$ctx.workerFunction:=This:C1470._processTable
 	$ctx.updateInterval:=This:C1470.updateInterval
-	$ctx.dispatchInterval:=This:C1470.dispatchInterval
 	
 	This:C1470.start().toggleExportButton()
 	
