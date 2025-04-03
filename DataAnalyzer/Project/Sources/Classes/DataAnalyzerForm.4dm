@@ -39,37 +39,34 @@ Function toXlsx() : 4D:C1709.File
 	$file:=File:C1566("/RESOURCES/XLSX/DataAnalyzer.xlsx")
 	$status:=$XLSX.read($file)
 	
-	$values:={}
-	
 	var $value : Object
 	var $i : Integer
 	
-	$i:=1
+	If (Form:C1466.JSON.data.length#0)
+		$values:={}
+		$i:=1
+		For each ($value; Form:C1466.JSON.data)
+			$i+=1
+			$idx:=String:C10($i)
+			$values["A"+$idx]:=$value.tableNumber
+			$values["B"+$idx]:=$value.tableName
+			$values["C"+$idx]:=$value.tableUUID
+			$values["D"+$idx]:=$value.records.number
+			$values["E"+$idx]:=$value.records.count
+			$values["F"+$idx]:=$value.records.size
+			$values["G"+$idx]:=$value.records.max
+			$values["H"+$idx]:=$value.records.min
+			$values["I"+$idx]:=$value.records.average
+			$values["J"+$idx]:=$value.blob.number
+			$values["K"+$idx]:=$value.blob.count
+			$values["L"+$idx]:=$value.blob.size
+			$values["M"+$idx]:=$value.blob.max
+			$values["N"+$idx]:=$value.blob.min
+			$values["O"+$idx]:=$value.blob.average
+		End for each 
+		$status:=$XLSX.setValues($values; 1)
+	End if 
 	
-	For each ($value; Form:C1466.JSON.data)
-		
-		$i+=1
-		$idx:=String:C10($i)
-		
-		$values["A"+$idx]:=$value.tableNumber
-		$values["B"+$idx]:=$value.tableName
-		$values["C"+$idx]:=$value.tableUUID
-		$values["D"+$idx]:=$value.records.number
-		$values["E"+$idx]:=$value.records.count
-		$values["F"+$idx]:=$value.records.size
-		$values["G"+$idx]:=$value.records.max
-		$values["H"+$idx]:=$value.records.min
-		$values["I"+$idx]:=$value.records.average
-		$values["J"+$idx]:=$value.blob.number
-		$values["K"+$idx]:=$value.blob.count
-		$values["L"+$idx]:=$value.blob.size
-		$values["M"+$idx]:=$value.blob.max
-		$values["N"+$idx]:=$value.blob.min
-		$values["O"+$idx]:=$value.blob.average
-		
-	End for each 
-	
-	$status:=$XLSX.setValues($values; 1)
 	$file:=Folder:C1567(fk desktop folder:K87:19).file($file.fullName)
 	$file:=cs:C1710.FileName.new($file).file
 	$status:=$XLSX.write($file)
