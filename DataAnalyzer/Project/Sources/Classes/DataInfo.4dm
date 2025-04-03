@@ -230,11 +230,11 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.lastOperation:=BLOB to longint:C551($blDataBlock; $byteOrdering; $offset)
 			Case of 
 				: (This:C1470.lastOperation=0)
-					This:C1470.lastOperationDescription:=Localized string:C991("The Cache has been correctly flushed")
+					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache has been correctly flushed")
 				: (This:C1470.lastOperation=-1)
-					This:C1470.lastOperationDescription:=Localized string:C991("The Cache flushing has been interrupted!")
+					This:C1470.lastOperationDescription:=Get localized string:C991("The Cache flushing has been interrupted!")
 				Else 
-					This:C1470.lastOperationDescription:=Localized string:C991("Unknown Last Operation!")
+					This:C1470.lastOperationDescription:=Get localized string:C991("Unknown Last Operation!")
 			End case 
 			
 			$vdt_LastParam:=This:C1470.chunkToHex($blDataBlock; ->$offset; 4; False:C215)
@@ -304,23 +304,23 @@ Function readFileInfo() : cs:C1710.DataInfo
 			This:C1470.dataFileNeedsRepair:=($vdt_Flags1=1)
 			
 			If (This:C1470.dataFileNeedsRepair)
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File needs to be repaired."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File needs to be repaired."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File does not need to be repaired."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File does not need to be repaired."))
 			End if 
 			
 			This:C1470.dataFileContainsStructure:=($vdt_Flags3=1)
 			If (This:C1470.dataFileContainsStructure)
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Structure."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Structure."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Data File contains Data."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Data File contains Data."))
 			End if 
 			
 			This:C1470.indexStoredInSeparateSegment:=($vdt_Flags4=1)
 			If (This:C1470.indexStoredInSeparateSegment)
-				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in a separate segment."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in a separate segment."))
 			Else 
-				This:C1470.dataFileInformation.push(Localized string:C991("Indexes are in the same segment."))
+				This:C1470.dataFileInformation.push(Get localized string:C991("Indexes are in the same segment."))
 			End if 
 			
 			$vdt_Addr1stTrou:=This:C1470.chunkToHex($blDataBlock; ->$offset; 8; True:C214)
@@ -702,7 +702,7 @@ Function readTableInfo($tableAddress : Object) : Object
 				
 				$offset:=$offset+16  //Infos not used here
 				$vUUID_TableDef:=This:C1470.chunkToHex($blDataBlock; ->$offset; 16; False:C215)  //VUUIDBuffer TableDefID;  // ID TDEF 
-				$genericTableName:=Localized string:C991("Table_")+String:C10($tableNumber)
+				$genericTableName:=Get localized string:C991("Table_")+String:C10($tableNumber)
 				var $tableInfo : cs:C1710._TableInfo
 				//$tableInfo:=This.tableInfo.query("tableNumber === :1"; $tableNumber).first()
 				$tableInfo:=This:C1470.tableInfo.query("tableUUID === :1"; $vUUID_TableDef).first()
@@ -815,7 +815,11 @@ Function readblock($address : Text; $blkSize : Real; $flByteSwap : Boolean; $rea
 		If (This:C1470.isTryAvailable)
 			return Try(This:C1470.dataFileHandle.readBlob($blkSize))
 		Else 
-			return This:C1470.dataFileHandle.readBlob($blkSize)
+			var $data : 4D:C1709.Blob
+			ON ERR CALL:C155(Formula:C1597(generic_error_handler).source)
+			$data:=This:C1470.dataFileHandle.readBlob($blkSize)
+			ON ERR CALL:C155("")
+			return $data
 		End if 
 	End if 
 	
@@ -836,6 +840,10 @@ Function readblocks($blockPosition : Real; $data2Read : Real; $flIsNbOfBlocks : 
 		If (This:C1470.isTryAvailable)
 			return Try(This:C1470.dataFileHandle.readBlob($length))
 		Else 
-			return This:C1470.dataFileHandle.readBlob($length)
+			var $data : 4D:C1709.Blob
+			ON ERR CALL:C155(Formula:C1597(generic_error_handler).source)
+			$data:=This:C1470.dataFileHandle.readBlob($length)
+			ON ERR CALL:C155("")
+			return $data
 		End if 
 	End if 
