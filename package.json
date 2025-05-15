@@ -10,8 +10,8 @@
   "version": "1.0.22",
   "tool": {
     "platform": "macos",
-    "branch": "20%20Rx",
-    "version": "20%20R7",
+    "branch": "20.x",
+    "version": "20.6",
     "build": "latest",
     "arch": "arm"
   }
